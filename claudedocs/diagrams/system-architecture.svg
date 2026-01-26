@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .box { fill: #f0f4f8; stroke: #334155; stroke-width: 2; }
+      .client-box { fill: #dbeafe; stroke: #1e40af; stroke-width: 2; }
+      .web-box { fill: #fce7f3; stroke: #be185d; stroke-width: 2; }
+      .api-box { fill: #fef3c7; stroke: #d97706; stroke-width: 2; }
+      .service-box { fill: #d1fae5; stroke: #059669; stroke-width: 2; }
+      .model-box { fill: #e9d5ff; stroke: #7c3aed; stroke-width: 2; }
+      .db-box { fill: #fecaca; stroke: #dc2626; stroke-width: 2; }
+      .title { font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; fill: #1e293b; }
+      .subtitle { font-family: Arial, sans-serif; font-size: 12px; fill: #475569; }
+      .arrow { stroke: #64748b; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .label { font-family: Arial, sans-serif; font-size: 11px; fill: #334155; }
+      .section-title { font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; fill: #0f172a; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#64748b" />
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="600" y="30" text-anchor="middle" class="section-title">Ghost CMS 系统架构</text>
+
+  <!-- Layer 1: Client Layer -->
+  <text x="50" y="70" class="section-title">客户端层</text>
+
+  <rect x="50" y="80" width="200" height="100" class="client-box" rx="5"/>
+  <text x="150" y="110" text-anchor="middle" class="title">Admin UI</text>
+  <text x="150" y="130" text-anchor="middle" class="subtitle">Ember.js + React</text>
+  <text x="150" y="150" text-anchor="middle" class="subtitle">Admin API 客户端</text>
+
+  <rect x="280" y="80" width="200" height="100" class="client-box" rx="5"/>
+  <text x="380" y="110" text-anchor="middle" class="title">React Apps</text>
+  <text x="380" y="130" text-anchor="middle" class="subtitle">Settings, Posts, Stats</text>
+  <text x="380" y="150" text-anchor="middle" class="subtitle">微前端应用</text>
+
+  <rect x="510" y="80" width="200" height="100" class="client-box" rx="5"/>
+  <text x="610" y="110" text-anchor="middle" class="title">Public Apps</text>
+  <text x="610" y="130" text-anchor="middle" class="subtitle">Portal, Comments</text>
+  <text x="610" y="150" text-anchor="middle" class="subtitle">UMD Bundles</text>
+
+  <rect x="740" y="80" width="200" height="100" class="client-box" rx="5"/>
+  <text x="840" y="110" text-anchor="middle" class="title">Theme Engine</text>
+  <text x="840" y="130" text-anchor="middle" class="subtitle">Handlebars 模板</text>
+  <text x="840" y="150" text-anchor="middle" class="subtitle">Content API</text>
+
+  <!-- Arrows from Client to Web -->
+  <path d="M 150 180 L 150 230" class="arrow"/>
+  <path d="M 380 180 L 380 230" class="arrow"/>
+  <path d="M 610 180 L 610 230" class="arrow"/>
+  <path d="M 840 180 L 840 230" class="arrow"/>
+
+  <!-- Layer 2: Web Layer -->
+  <text x="50" y="220" class="section-title">Web 层 (Express)</text>
+
+  <rect x="50" y="230" width="180" height="90" class="web-box" rx="5"/>
+  <text x="140" y="255" text-anchor="middle" class="title">Admin Web</text>
+  <text x="140" y="275" text-anchor="middle" class="subtitle">路由: /ghost/</text>
+  <text x="140" y="295" text-anchor="middle" class="subtitle">JWT 认证</text>
+
+  <rect x="260" y="230" width="180" height="90" class="web-box" rx="5"/>
+  <text x="350" y="255" text-anchor="middle" class="title">API Web</text>
+  <text x="350" y="275" text-anchor="middle" class="subtitle">Admin/Content API</text>
+  <text x="350" y="295" text-anchor="middle" class="subtitle">版本控制</text>
+
+  <rect x="470" y="230" width="180" height="90" class="web-box" rx="5"/>
+  <text x="560" y="255" text-anchor="middle" class="title">Members Web</text>
+  <text x="560" y="275" text-anchor="middle" class="subtitle">会员认证</text>
+  <text x="560" y="295" text-anchor="middle" class="subtitle">Stripe Webhooks</text>
+
+  <rect x="680" y="230" width="180" height="90" class="web-box" rx="5"/>
+  <text x="770" y="255" text-anchor="middle" class="title">Frontend Web</text>
+  <text x="770" y="275" text-anchor="middle" class="subtitle">主题渲染</text>
+  <text x="770" y="295" text-anchor="middle" class="subtitle">RSS/Sitemap</text>
+
+  <!-- Arrows from Web to API -->
+  <path d="M 140 320 L 140 370" class="arrow"/>
+  <path d="M 350 320 L 350 370" class="arrow"/>
+  <path d="M 560 320 L 560 370" class="arrow"/>
+  <path d="M 770 320 L 770 370" class="arrow"/>
+
+  <!-- Layer 3: API Layer -->
+  <text x="50" y="360" class="section-title">API 层</text>
+
+  <rect x="80" y="370" width="160" height="80" class="api-box" rx="5"/>
+  <text x="160" y="395" text-anchor="middle" class="title">Posts API</text>
+  <text x="160" y="415" text-anchor="middle" class="subtitle">browse/read/add</text>
+  <text x="160" y="435" text-anchor="middle" class="subtitle">edit/destroy</text>
+
+  <rect x="270" y="370" width="160" height="80" class="api-box" rx="5"/>
+  <text x="350" y="395" text-anchor="middle" class="title">Users API</text>
+  <text x="350" y="415" text-anchor="middle" class="subtitle">认证/授权</text>
+  <text x="350" y="435" text-anchor="middle" class="subtitle">角色管理</text>
+
+  <rect x="460" y="370" width="160" height="80" class="api-box" rx="5"/>
+  <text x="540" y="395" text-anchor="middle" class="title">Members API</text>
+  <text x="540" y="415" text-anchor="middle" class="subtitle">订阅管理</text>
+  <text x="540" y="435" text-anchor="middle" class="subtitle">Stripe 集成</text>
+
+  <rect x="650" y="370" width="160" height="80" class="api-box" rx="5"/>
+  <text x="730" y="395" text-anchor="middle" class="title">Tags/Settings</text>
+  <text x="730" y="415" text-anchor="middle" class="subtitle">分类管理</text>
+  <text x="730" y="435" text-anchor="middle" class="subtitle">系统配置</text>
+
+  <!-- Arrows from API to Service -->
+  <path d="M 160 450 L 160 500" class="arrow"/>
+  <path d="M 350 450 L 350 500" class="arrow"/>
+  <path d="M 540 450 L 540 500" class="arrow"/>
+  <path d="M 730 450 L 730 500" class="arrow"/>
+
+  <!-- Layer 4: Service Layer -->
+  <text x="50" y="490" class="section-title">服务层</text>
+
+  <rect x="50" y="500" width="140" height="80" class="service-box" rx="5"/>
+  <text x="120" y="525" text-anchor="middle" class="title">Posts Service</text>
+  <text x="120" y="545" text-anchor="middle" class="subtitle">发布工作流</text>
+  <text x="120" y="565" text-anchor="middle" class="subtitle">邮件处理</text>
+
+  <rect x="220" y="500" width="140" height="80" class="service-box" rx="5"/>
+  <text x="290" y="525" text-anchor="middle" class="title">Email Service</text>
+  <text x="290" y="545" text-anchor="middle" class="subtitle">批量发送</text>
+  <text x="290" y="565" text-anchor="middle" class="subtitle">Mailgun</text>
+
+  <rect x="390" y="500" width="140" height="80" class="service-box" rx="5"/>
+  <text x="460" y="525" text-anchor="middle" class="title">Members</text>
+  <text x="460" y="545" text-anchor="middle" class="subtitle">会员系统</text>
+  <text x="460" y="565" text-anchor="middle" class="subtitle">订阅逻辑</text>
+
+  <rect x="560" y="500" width="140" height="80" class="service-box" rx="5"/>
+  <text x="630" y="525" text-anchor="middle" class="title">Auth Service</text>
+  <text x="630" y="545" text-anchor="middle" class="subtitle">JWT/Session</text>
+  <text x="630" y="565" text-anchor="middle" class="subtitle">权限验证</text>
+
+  <rect x="730" y="500" width="140" height="80" class="service-box" rx="5"/>
+  <text x="800" y="525" text-anchor="middle" class="title">Theme Engine</text>
+  <text x="800" y="545" text-anchor="middle" class="subtitle">Handlebars</text>
+  <text x="800" y="565" text-anchor="middle" class="subtitle">路由系统</text>
+
+  <!-- Arrows from Service to Model -->
+  <path d="M 120 580 L 120 630" class="arrow"/>
+  <path d="M 290 580 L 290 630" class="arrow"/>
+  <path d="M 460 580 L 460 630" class="arrow"/>
+  <path d="M 630 580 L 630 630" class="arrow"/>
+  <path d="M 800 580 L 800 630" class="arrow"/>
+
+  <!-- Layer 5: Model Layer -->
+  <text x="50" y="620" class="section-title">模型层 (Bookshelf ORM)</text>
+
+  <rect x="100" y="630" width="140" height="70" class="model-box" rx="5"/>
+  <text x="170" y="655" text-anchor="middle" class="title">Post Model</text>
+  <text x="170" y="675" text-anchor="middle" class="subtitle">生命周期钩子</text>
+  <text x="170" y="690" text-anchor="middle" class="subtitle">关系映射</text>
+
+  <rect x="270" y="630" width="140" height="70" class="model-box" rx="5"/>
+  <text x="340" y="655" text-anchor="middle" class="title">User Model</text>
+  <text x="340" y="675" text-anchor="middle" class="subtitle">密码哈希</text>
+  <text x="340" y="690" text-anchor="middle" class="subtitle">角色关联</text>
+
+  <rect x="440" y="630" width="140" height="70" class="model-box" rx="5"/>
+  <text x="510" y="655" text-anchor="middle" class="title">Member Model</text>
+  <text x="510" y="675" text-anchor="middle" class="subtitle">订阅状态</text>
+  <text x="510" y="690" text-anchor="middle" class="subtitle">Stripe 关联</text>
+
+  <rect x="610" y="630" width="140" height="70" class="model-box" rx="5"/>
+  <text x="680" y="655" text-anchor="middle" class="title">Tag/Settings</text>
+  <text x="680" y="675" text-anchor="middle" class="subtitle">分类模型</text>
+  <text x="680" y="690" text-anchor="middle" class="subtitle">配置模型</text>
+
+  <!-- Arrows from Model to Database -->
+  <path d="M 170 700 L 170 750" class="arrow"/>
+  <path d="M 340 700 L 340 750" class="arrow"/>
+  <path d="M 510 700 L 510 750" class="arrow"/>
+  <path d="M 680 700 L 680 750" class="arrow"/>
+
+  <!-- Layer 6: Database Layer -->
+  <text x="50" y="740" class="section-title">数据层</text>
+
+  <rect x="150" y="750" width="200" height="100" class="db-box" rx="5"/>
+  <text x="250" y="780" text-anchor="middle" class="title">MySQL Database</text>
+  <text x="250" y="800" text-anchor="middle" class="subtitle">主数据存储</text>
+  <text x="250" y="820" text-anchor="middle" class="subtitle">Knex Query Builder</text>
+
+  <rect x="380" y="750" width="200" height="100" class="db-box" rx="5"/>
+  <text x="480" y="780" text-anchor="middle" class="title">Redis Cache</text>
+  <text x="480" y="800" text-anchor="middle" class="subtitle">会话存储</text>
+  <text x="480" y="820" text-anchor="middle" class="subtitle">设置缓存</text>
+
+  <rect x="610" y="750" width="200" height="100" class="db-box" rx="5"/>
+  <text x="710" y="780" text-anchor="middle" class="title">File Storage</text>
+  <text x="710" y="800" text-anchor="middle" class="subtitle">图片/媒体</text>
+  <text x="710" y="820" text-anchor="middle" class="subtitle">本地/S3</text>
+
+  <!-- External Services -->
+  <text x="920" y="370" class="section-title">外部服务</text>
+
+  <rect x="920" y="380" width="200" height="60" class="box" rx="5"/>
+  <text x="1020" y="405" text-anchor="middle" class="title">Stripe</text>
+  <text x="1020" y="425" text-anchor="middle" class="subtitle">支付处理</text>
+
+  <rect x="920" y="460" width="200" height="60" class="box" rx="5"/>
+  <text x="1020" y="485" text-anchor="middle" class="title">Mailgun</text>
+  <text x="1020" y="505" text-anchor="middle" class="subtitle">邮件发送</text>
+
+  <rect x="920" y="540" width="200" height="60" class="box" rx="5"/>
+  <text x="1020" y="565" text-anchor="middle" class="title">Tinybird</text>
+  <text x="1020" y="585" text-anchor="middle" class="subtitle">分析统计</text>
+
+  <rect x="920" y="620" width="200" height="60" class="box" rx="5"/>
+  <text x="1020" y="645" text-anchor="middle" class="title">S3/CDN</text>
+  <text x="1020" y="665" text-anchor="middle" class="subtitle">对象存储</text>
+
+  <!-- Arrows to External Services -->
+  <path d="M 700 540 L 920 410" class="arrow" stroke-dasharray="5,5"/>
+  <path d="M 360 540 L 920 490" class="arrow" stroke-dasharray="5,5"/>
+  <path d="M 700 540 L 920 570" class="arrow" stroke-dasharray="5,5"/>
+  <path d="M 810 700 L 920 650" class="arrow" stroke-dasharray="5,5"/>
+
+  <!-- Legend -->
+  <text x="50" y="880" class="subtitle">图例: 实线箭头 = 同步调用 | 虚线箭头 = 异步/外部调用</text>
+</svg>

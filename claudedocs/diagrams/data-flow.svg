@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1400" height="1000" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .flow-box { fill: #f0f9ff; stroke: #0284c7; stroke-width: 2; }
+      .process-box { fill: #fef3c7; stroke: #d97706; stroke-width: 2; }
+      .decision-box { fill: #fce7f3; stroke: #be185d; stroke-width: 2; }
+      .db-box { fill: #dbeafe; stroke: #1e40af; stroke-width: 2; }
+      .event-box { fill: #d1fae5; stroke: #059669; stroke-width: 2; }
+      .title { font-family: Arial, sans-serif; font-size: 13px; font-weight: bold; fill: #1e293b; }
+      .subtitle { font-family: Arial, sans-serif; font-size: 10px; fill: #475569; }
+      .arrow { stroke: #64748b; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .arrow-success { stroke: #059669; stroke-width: 2; fill: none; marker-end: url(#arrowhead-success); }
+      .arrow-error { stroke: #dc2626; stroke-width: 2; fill: none; marker-end: url(#arrowhead-error); }
+      .label { font-family: Arial, sans-serif; font-size: 10px; fill: #334155; }
+      .section-title { font-family: Arial, sans-serif; font-size: 20px; font-weight: bold; fill: #0f172a; }
+      .step-number { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #ffffff; }
+      .step-circle { fill: #0284c7; stroke: #075985; stroke-width: 2; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#64748b" />
+    </marker>
+    <marker id="arrowhead-success" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#059669" />
+    </marker>
+    <marker id="arrowhead-error" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#dc2626" />
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="700" y="40" text-anchor="middle" class="section-title">Ghost 文章创建数据流</text>
+
+  <!-- Step 1: HTTP Request -->
+  <circle cx="80" cy="100" r="20" class="step-circle"/>
+  <text x="80" y="107" text-anchor="middle" class="step-number">1</text>
+
+  <rect x="120" y="70" width="280" height="60" class="flow-box" rx="5"/>
+  <text x="260" y="92" text-anchor="middle" class="title">HTTP POST Request</text>
+  <text x="260" y="110" text-anchor="middle" class="subtitle">POST /ghost/api/admin/posts/</text>
+  <text x="260" y="122" text-anchor="middle" class="subtitle">Header: Authorization: Bearer ...</text>
+
+  <path d="M 260 130 L 260 170" class="arrow"/>
+
+  <!-- Step 2: Middleware Chain -->
+  <circle cx="80" cy="200" r="20" class="step-circle"/>
+  <text x="80" y="207" text-anchor="middle" class="step-number">2</text>
+
+  <rect x="120" y="170" width="280" height="100" class="process-box" rx="5"/>
+  <text x="260" y="192" text-anchor="middle" class="title">中间件链处理</text>
+  <text x="140" y="210" class="subtitle">• Body Parser (JSON 解析)</text>
+  <text x="140" y="225" class="subtitle">• CORS 处理</text>
+  <text x="140" y="240" class="subtitle">• JWT 认证验证</text>
+  <text x="140" y="255" class="subtitle">• 权限检查 (canAdd 'post')</text>
+
+  <path d="M 260 270 L 260 310" class="arrow"/>
+
+  <!-- Step 3: API Endpoint -->
+  <circle cx="80" cy="340" r="20" class="step-circle"/>
+  <text x="80" y="347" text-anchor="middle" class="step-number">3</text>
+
+  <rect x="120" y="310" width="280" height="90" class="process-box" rx="5"/>
+  <text x="260" y="332" text-anchor="middle" class="title">API 端点处理</text>
+  <text x="140" y="350" class="subtitle">文件: posts.js:174</text>
+  <text x="140" y="365" class="subtitle">• 参数验证 (include, formats)</text>
+  <text x="140" y="380" class="subtitle">• 提取请求数据 frame.data.posts[0]</text>
+  <text x="140" y="395" class="subtitle">• 调用 models.Post.add(...)</text>
+
+  <path d="M 260 400 L 260 440" class="arrow"/>
+
+  <!-- Step 4: Model Layer -->
+  <circle cx="80" cy="470" r="20" class="step-circle"/>
+  <text x="80" y="477" text-anchor="middle" class="step-number">4</text>
+
+  <rect x="120" y="440" width="280" height="110" class="process-box" rx="5"/>
+  <text x="260" y="462" text-anchor="middle" class="title">模型层处理</text>
+  <text x="140" y="480" class="subtitle">文件: post.js:1340</text>
+  <text x="140" y="495" class="subtitle">• 应用默认值 defaults()</text>
+  <text x="140" y="510" class="subtitle">• 限制检查 limitService</text>
+  <text x="140" y="525" class="subtitle">• 创建事务 (如需要)</text>
+  <text x="140" y="540" class="subtitle">• 调用 ghostBookshelf.Model.add()</text>
+
+  <!-- Decision: Has Transaction? -->
+  <path d="M 260 550 L 260 590" class="arrow"/>
+
+  <circle cx="80" cy="620" r="20" class="step-circle"/>
+  <text x="80" y="627" text-anchor="middle" class="step-number">5</text>
+
+  <polygon points="260,590 360,620 260,650 160,620" class="decision-box"/>
+  <text x="260" y="618" text-anchor="middle" class="title">是否有</text>
+  <text x="260" y="632" text-anchor="middle" class="title">事务?</text>
+
+  <path d="M 160 620 L 100 620 L 100 690 L 160 690" class="arrow"/>
+  <text x="110" y="610" class="label">否</text>
+  <text x="110" y="665" class="label">创建新事务</text>
+
+  <path d="M 360 620 L 420 620" class="arrow"/>
+  <text x="370 615" class="label">是</text>
+
+  <!-- Step 6: Lifecycle Hooks -->
+  <circle cx="460" cy="100" r="20" class="step-circle"/>
+  <text x="460" y="107" text-anchor="middle" class="step-number">6</text>
+
+  <rect x="500" y="70" width="280" height="120" class="process-box" rx="5"/>
+  <text x="640" y="92" text-anchor="middle" class="title">生命周期钩子</text>
+  <text x="520" y="110" class="subtitle">onCreating:</text>
+  <text x="530" y="125" class="subtitle">• 设置 created_by</text>
+  <text x="530" y="140" class="subtitle">• 生成 slug</text>
+  <text x="520" y="158" class="subtitle">onSaving:</text>
+  <text x="530" y="173" class="subtitle">• 验证 mobiledoc/lexical</text>
+  <text x="530" y="185" class="subtitle">• 生成 HTML 和 plaintext</text>
+
+  <path d="M 420 620 L 640 620 L 640 190" class="arrow"/>
+  <path d="M 640 190 L 640 220" class="arrow"/>
+
+  <!-- Step 7: Database Insert -->
+  <circle cx="460" cy="250" r="20" class="step-circle"/>
+  <text x="460" y="257" text-anchor="middle" class="step-number">7</text>
+
+  <rect x="500" y="220" width="280" height="100" class="db-box" rx="5"/>
+  <text x="640" y="242" text-anchor="middle" class="title">数据库插入</text>
+  <text x="520" y="260" class="subtitle">Knex Query Builder:</text>
+  <text x="530" y="275" class="subtitle">INSERT INTO posts (...) VALUES (...)</text>
+  <text x="530" y="290" class="subtitle">INSERT INTO posts_tags (...)</text>
+  <text x="530" y="305" class="subtitle">INSERT INTO posts_authors (...)</text>
+
+  <path d="M 640 320 L 640 360" class="arrow"/>
+
+  <!-- Step 8: Post-Create Hooks -->
+  <circle cx="460" cy="390" r="20" class="step-circle"/>
+  <text x="460" y="397" text-anchor="middle" class="step-number">8</text>
+
+  <rect x="500" y="360" width="280" height="90" class="process-box" rx="5"/>
+  <text x="640" y="382" text-anchor="middle" class="title">创建后钩子</text>
+  <text x="520" y="400" class="subtitle">onCreated:</text>
+  <text x="530" y="415" class="subtitle">• 触发 post.added 事件</text>
+  <text x="520" y="433" class="subtitle">onSaved:</text>
+  <text x="530" y="448" class="subtitle">• 处理关联关系</text>
+
+  <path d="M 640 450 L 640 490" class="arrow"/>
+
+  <!-- Step 9: Re-fetch Data -->
+  <circle cx="460" cy="520" r="20" class="step-circle"/>
+  <text x="460" y="527" text-anchor="middle" class="step-number">9</text>
+
+  <rect x="500" y="490" width="280" height="80" class="db-box" rx="5"/>
+  <text x="640" y="512" text-anchor="middle" class="title">重新获取完整数据</text>
+  <text x="520" y="530" class="subtitle">findOne({id: post.id}, options):</text>
+  <text x="530" y="545" class="subtitle">• 加载所有关联 (tags, authors)</text>
+  <text x="530" y="560" class="subtitle">• 获取计算字段和默认值</text>
+
+  <path d="M 640 570 L 640 610" class="arrow"/>
+
+  <!-- Step 10: Event System -->
+  <circle cx="460" cy="640" r="20" class="step-circle"/>
+  <text x="460" y="647" text-anchor="middle" class="step-number">10</text>
+
+  <rect x="500" y="610" width="280" height="100" class="event-box" rx="5"/>
+  <text x="640" y="632" text-anchor="middle" class="title">事件系统触发</text>
+  <text x="520" y="650" class="subtitle">DomainEvents.emit('post.added'):</text>
+  <text x="530" y="665" class="subtitle">• Webhook 通知</text>
+  <text x="530" y="680" class="subtitle">• 缓存失效</text>
+  <text x="530" y="695" class="subtitle">• 审计日志</text>
+
+  <!-- Parallel Event Handlers -->
+  <path d="M 780 660 L 850 580" class="arrow" stroke-dasharray="5,5"/>
+  <path d="M 780 660 L 850 660" class="arrow" stroke-dasharray="5,5"/>
+  <path d="M 780 660 L 850 740" class="arrow" stroke-dasharray="5,5"/>
+
+  <rect x="850" y="550" width="180" height="60" class="event-box" rx="5"/>
+  <text x="940" y="572" text-anchor="middle" class="title">Webhook Handler</text>
+  <text x="940" y="590" text-anchor="middle" class="subtitle">触发外部 webhooks</text>
+
+  <rect x="850" y="630" width="180" height="60" class="event-box" rx="5"/>
+  <text x="940" y="652" text-anchor="middle" class="title">Cache Handler</text>
+  <text x="940" y="670" text-anchor="middle" class="subtitle">清除相关缓存</text>
+
+  <rect x="850" y="710" width="180" height="60" class="event-box" rx="5"/>
+  <text x="940" y="732" text-anchor="middle" class="title">Audit Handler</text>
+  <text x="940" y="750" text-anchor="middle" class="subtitle">记录操作日志</text>
+
+  <!-- Step 11: Response -->
+  <path d="M 640 710 L 640 780" class="arrow"/>
+
+  <circle cx="460" cy="810" r="20" class="step-circle"/>
+  <text x="460" y="817" text-anchor="middle" class="step-number">11</text>
+
+  <rect x="500" y="780" width="280" height="90" class="flow-box" rx="5"/>
+  <text x="640" y="802" text-anchor="middle" class="title">HTTP 响应</text>
+  <text x="520" y="820" class="subtitle">Status: 201 Created</text>
+  <text x="520" y="835" class="subtitle">Body: {posts: [{id, title, ...}]}</text>
+  <text x="520" y="850" class="subtitle">Headers: Location, X-Cache-Invalidate</text>
+
+  <!-- Error Handling Flow -->
+  <text x="1050" y="100" class="section-title">错误处理流</text>
+
+  <rect x="1080" y="130" width="240" height="60" class="decision-box" rx="5"/>
+  <text x="1200" y="152" text-anchor="middle" class="title">认证失败</text>
+  <text x="1200" y="170" text-anchor="middle" class="subtitle">→ 401 Unauthorized</text>
+
+  <rect x="1080" y="210" width="240" height="60" class="decision-box" rx="5"/>
+  <text x="1200" y="232" text-anchor="middle" class="title">权限不足</text>
+  <text x="1200" y="250" text-anchor="middle" class="subtitle">→ 403 Forbidden</text>
+
+  <rect x="1080" y="290" width="240" height="60" class="decision-box" rx="5"/>
+  <text x="1200" y="312" text-anchor="middle" class="title">验证错误</text>
+  <text x="1200" y="330" text-anchor="middle" class="subtitle">→ 422 Unprocessable Entity</text>
+
+  <rect x="1080" y="370" width="240" height="60" class="decision-box" rx="5"/>
+  <text x="1200" y="392" text-anchor="middle" class="title">超出限制</text>
+  <text x="1200" y="410" text-anchor="middle" class="subtitle">→ 429 Too Many Requests</text>
+
+  <rect x="1080" y="450" width="240" height="60" class="decision-box" rx="5"/>
+  <text x="1200" y="472" text-anchor="middle" class="title">数据库错误</text>
+  <text x="1200" y="490" text-anchor="middle" class="subtitle">→ 500 Internal Server Error</text>
+
+  <!-- Connect errors to main flow -->
+  <path d="M 400 200 L 1080 160" class="arrow-error" stroke-dasharray="3,3"/>
+  <path d="M 400 340 L 1080 240" class="arrow-error" stroke-dasharray="3,3"/>
+  <path d="M 260 270 L 1080 320" class="arrow-error" stroke-dasharray="3,3"/>
+  <path d="M 260 550 L 1080 400" class="arrow-error" stroke-dasharray="3,3"/>
+  <path d="M 640 320 L 1080 480" class="arrow-error" stroke-dasharray="3,3"/>
+
+  <!-- Transaction Rollback -->
+  <rect x="1080" y="550" width="240" height="80" class="db-box" rx="5"/>
+  <text x="1200" y="572" text-anchor="middle" class="title">事务回滚</text>
+  <text x="1100" y="590" class="subtitle">如果发生错误:</text>
+  <text x="1110" y="605" class="subtitle">• 所有数据库更改回滚</text>
+  <text x="1110" y="620" class="subtitle">• 返回错误响应</text>
+
+  <path d="M 1080 480 L 1080 590 L 1080 480" class="arrow-error" stroke-dasharray="3,3"/>
+
+  <!-- Data Flow Summary -->
+  <rect x="120" y="900" width="1200" height="80" class="flow-box" rx="5"/>
+  <text x="720" y="925" text-anchor="middle" class="title">数据流总结</text>
+  <text x="140" y="945" class="subtitle">请求 → 中间件 → 端点 → 模型 → 钩子 → 数据库插入 → 后置钩子 → 重获取 → 事件触发 → 响应</text>
+  <text x="140" y="965" class="subtitle">关键点: ① 事务保证原子性  ② 两次数据库操作（插入+重获取）  ③ 事件系统实现解耦</text>
+</svg>

@@ -1,0 +1,1945 @@
+# Ghost CMS API 完整参考文档
+
+## 📋 目录
+
+- [API 概览](#api-概览)
+- [认证方式](#认证方式)
+- [Admin API](#admin-api)
+- [Content API](#content-api)
+- [Members API](#members-api)
+- [通用规范](#通用规范)
+- [错误处理](#错误处理)
+- [最佳实践](#最佳实践)
+
+---
+
+## API 概览
+
+![Ghost API 架构](diagrams/api-architecture.svg)
+
+Ghost CMS 提供三个主要的 RESTful API 接口：
+
+| API | 用途 | 认证方式 | 访问权限 |
+|-----|------|----------|----------|
+| **Admin API** | 内容管理、用户管理、系统配置 | JWT Token | 读写 |
+| **Content API** | 公开内容访问 | API Key | 只读 |
+| **Members API** | 会员认证、订阅管理 | Cookie Session | 会员专属 |
+
+### API 端点基础 URL
+
+```
+Admin API:   https://your-site.com/ghost/api/admin/
+Content API: https://your-site.com/ghost/api/content/
+Members API: https://your-site.com/members/api/
+```
+
+### API 版本
+
+当前版本: **v5.0**
+
+版本控制通过 URL 路径实现：
+```
+/ghost/api/v5/admin/posts/
+/ghost/api/v5/content/posts/
+```
+
+---
+
+## 认证方式
+
+![API 请求-响应流程](diagrams/api-request-response.svg)
+
+### 1. JWT 认证 (Admin API)
+
+#### 获取 JWT Token
+
+**方法 1: 用户名密码登录**
+
+```http
+POST /ghost/api/admin/session/
+Content-Type: application/json
+
+{
+  "username": "admin@example.com",
+  "password": "your-password"
+}
+```
+
+**响应**:
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "expires_in": 43200,
+  "token_type": "Bearer"
+}
+```
+
+**方法 2: 集成 API Key**
+
+```javascript
+const jwt = require('jsonwebtoken');
+
+// Admin API Key (在 Ghost Admin > Integrations 中创建)
+const [id, secret] = 'your_admin_api_key'.split(':');
+
+// 生成 JWT
+const token = jwt.sign({}, Buffer.from(secret, 'hex'), {
+    keyid: id,
+    algorithm: 'HS256',
+    expiresIn: '5m',
+    audience: '/admin/'
+});
+```
+
+#### 使用 JWT Token
+
+```http
+GET /ghost/api/admin/posts/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+**特性**:
+- ✅ Token 有效期: **12 小时** (用户登录) 或 **5 分钟** (集成 API)
+- ✅ 刷新机制: 重新登录或重新生成
+- ✅ Scope: 完整的 Admin 权限
+- ✅ 支持所有 CRUD 操作
+
+---
+
+### 2. API Key 认证 (Content API)
+
+#### 获取 API Key
+
+在 Ghost Admin > Settings > Integrations > Add custom integration
+
+**使用 API Key**:
+
+```http
+GET /ghost/api/content/posts/?key=22444f78447824223cefc48062
+```
+
+或使用 JavaScript SDK:
+
+```javascript
+const GhostContentAPI = require('@tryghost/content-api');
+
+const api = new GhostContentAPI({
+  url: 'https://demo.ghost.io',
+  key: '22444f78447824223cefc48062',
+  version: 'v5.0'
+});
+
+// 获取文章
+const posts = await api.posts.browse({
+  limit: 5,
+  include: 'tags,authors'
+});
+```
+
+**特性**:
+- ✅ 无过期时间
+- ✅ 只读访问
+- ✅ 公开内容
+- ✅ 不需要用户认证
+
+---
+
+### 3. Cookie Session (Members API)
+
+#### Magic Link 登录
+
+```http
+POST /members/api/send-magic-link
+Content-Type: application/json
+
+{
+  "email": "member@example.com",
+  "emailType": "signin"
+}
+```
+
+**响应**:
+```json
+{
+  "success": true
+}
+```
+
+会员收到邮件，点击 Magic Link 后自动创建 Session:
+
+```
+Cookie: ghost-members-ssr=s%3A...
+Max-Age: 15552000 (180 天)
+HttpOnly: true
+Secure: true
+SameSite: Lax
+```
+
+**特性**:
+- ✅ 无密码登录
+- ✅ Session 有效期: **6 个月**
+- ✅ 自动续期
+- ✅ 会员专属内容访问
+
+---
+
+## Admin API
+
+### Posts (文章管理)
+
+#### 浏览文章列表
+
+```http
+GET /ghost/api/admin/posts/
+Authorization: Bearer {token}
+```
+
+**查询参数**:
+
+| 参数 | 类型 | 说明 | 示例 |
+|------|------|------|------|
+| `limit` | integer | 每页数量 (默认: 15, 最大: 100) | `?limit=5` |
+| `page` | integer | 页码 (从 1 开始) | `?page=2` |
+| `filter` | string | NQL 过滤表达式 | `?filter=status:published` |
+| `include` | string | 包含关联资源 | `?include=tags,authors` |
+| `fields` | string | 字段选择 | `?fields=title,slug` |
+| `order` | string | 排序字段 | `?order=published_at DESC` |
+| `formats` | string | 内容格式 | `?formats=html,plaintext` |
+
+**NQL 过滤示例**:
+
+```
+# 已发布且推荐的文章
+?filter=status:published+featured:true
+
+# 特定标签
+?filter=tag:news
+
+# 特定作者
+?filter=author.slug:john
+
+# 日期范围
+?filter=published_at:>2026-01-01
+
+# 可见性
+?filter=visibility:members
+
+# 复杂组合
+?filter=status:published+tag:news,featured:true
+```
+
+**响应**:
+
+```json
+{
+  "posts": [
+    {
+      "id": "507f1f77bcf86cd799439011",
+      "uuid": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "title": "My Post",
+      "slug": "my-post",
+      "mobiledoc": "{...}",
+      "lexical": null,
+      "html": "<p>Content here</p>",
+      "plaintext": "Content here",
+      "feature_image": "https://example.com/image.jpg",
+      "featured": false,
+      "status": "published",
+      "visibility": "public",
+      "created_at": "2026-01-26T12:00:00.000Z",
+      "updated_at": "2026-01-26T12:00:00.000Z",
+      "published_at": "2026-01-26T12:00:00.000Z",
+      "custom_excerpt": "A short excerpt",
+      "canonical_url": null,
+      "url": "https://example.com/my-post/",
+      "excerpt": "Content here",
+      "reading_time": 1,
+      "email_only": false,
+      "tags": [
+        {
+          "id": "1",
+          "name": "News",
+          "slug": "news",
+          "description": null,
+          "visibility": "public"
+        }
+      ],
+      "authors": [
+        {
+          "id": "1",
+          "name": "Ghost",
+          "slug": "ghost",
+          "email": "ghost@example.com",
+          "profile_image": null,
+          "cover_image": null,
+          "bio": null,
+          "website": null,
+          "location": null
+        }
+      ],
+      "primary_author": {...},
+      "primary_tag": {...}
+    }
+  ],
+  "meta": {
+    "pagination": {
+      "page": 1,
+      "limit": 15,
+      "pages": 5,
+      "total": 67,
+      "next": 2,
+      "prev": null
+    }
+  }
+}
+```
+
+---
+
+#### 获取单个文章
+
+```http
+GET /ghost/api/admin/posts/:id/
+Authorization: Bearer {token}
+```
+
+或通过 slug:
+
+```http
+GET /ghost/api/admin/posts/slug/:slug/
+Authorization: Bearer {token}
+```
+
+**示例**:
+
+```bash
+# 通过 ID
+curl https://demo.ghost.io/ghost/api/admin/posts/507f1f77bcf86cd799439011/ \
+  -H "Authorization: Bearer {token}"
+
+# 通过 slug
+curl https://demo.ghost.io/ghost/api/admin/posts/slug/my-post/ \
+  -H "Authorization: Bearer {token}" \
+  -G \
+  --data-urlencode "include=tags,authors"
+```
+
+**响应**: 与浏览列表相同，但返回单个对象
+
+---
+
+#### 创建文章
+
+```http
+POST /ghost/api/admin/posts/
+Authorization: Bearer {token}
+Content-Type: application/json
+```
+
+**请求体**:
+
+```json
+{
+  "posts": [
+    {
+      "title": "My New Post",
+      "status": "draft",
+      "mobiledoc": "{\"version\":\"0.3.1\",\"atoms\":[],\"cards\":[],\"markups\":[],\"sections\":[[1,\"p\",[[0,[],0,\"Hello World\"]]]]}",
+      "tags": [
+        {
+          "name": "News"
+        }
+      ],
+      "authors": [
+        {
+          "id": "1"
+        }
+      ],
+      "feature_image": "https://example.com/image.jpg",
+      "featured": false,
+      "visibility": "public",
+      "custom_excerpt": "A custom excerpt"
+    }
+  ]
+}
+```
+
+**字段说明**:
+
+| 字段 | 类型 | 必需 | 说明 |
+|------|------|------|------|
+| `title` | string | ✅ | 文章标题 (最大 2000 字符) |
+| `status` | enum | ❌ | 状态: draft, published, scheduled (默认: draft) |
+| `mobiledoc` | string | ✅* | Mobiledoc 格式内容 |
+| `lexical` | string | ✅* | Lexical 格式内容 |
+| `html` | string | ❌ | HTML 内容 (只读) |
+| `feature_image` | string | ❌ | 特色图片 URL |
+| `featured` | boolean | ❌ | 是否推荐 (默认: false) |
+| `visibility` | enum | ❌ | public, members, paid, tiers (默认: public) |
+| `tags` | array | ❌ | 标签数组 |
+| `authors` | array | ❌ | 作者数组 |
+| `published_at` | datetime | ❌ | 发布时间 (定时发布时需要) |
+
+*mobiledoc 或 lexical 二选一
+
+**响应**:
+
+```json
+{
+  "posts": [
+    {
+      "id": "507f1f77bcf86cd799439011",
+      "title": "My New Post",
+      "slug": "my-new-post",
+      "status": "draft",
+      ...
+    }
+  ]
+}
+```
+
+**状态码**: `201 Created`
+
+---
+
+#### 更新文章
+
+```http
+PUT /ghost/api/admin/posts/:id/
+Authorization: Bearer {token}
+Content-Type: application/json
+```
+
+**请求体**:
+
+```json
+{
+  "posts": [
+    {
+      "title": "Updated Title",
+      "updated_at": "2026-01-26T12:00:00.000Z"
+    }
+  ]
+}
+```
+
+⚠️ **重要**: 必须包含 `updated_at` 字段以防止并发更新冲突
+
+**发布文章**:
+
+```json
+{
+  "posts": [
+    {
+      "status": "published",
+      "updated_at": "2026-01-26T12:00:00.000Z"
+    }
+  ]
+}
+```
+
+**定时发布**:
+
+```json
+{
+  "posts": [
+    {
+      "status": "scheduled",
+      "published_at": "2026-01-27T10:00:00.000Z",
+      "updated_at": "2026-01-26T12:00:00.000Z"
+    }
+  ]
+}
+```
+
+**响应**: 更新后的文章对象
+
+---
+
+#### 删除文章
+
+```http
+DELETE /ghost/api/admin/posts/:id/
+Authorization: Bearer {token}
+```
+
+**响应**: `204 No Content`
+
+---
+
+#### 批量操作
+
+**批量编辑**:
+
+```http
+PUT /ghost/api/admin/posts/bulk/
+Authorization: Bearer {token}
+Content-Type: application/json
+```
+
+**请求体**:
+
+```json
+{
+  "bulk": {
+    "action": "unpublish",
+    "meta": {}
+  },
+  "filter": "tag:news"
+}
+```
+
+**支持的操作**:
+
+| Action | 说明 | Meta 参数 |
+|--------|------|-----------|
+| `unpublish` | 取消发布 | - |
+| `unschedule` | 取消定时发布 | - |
+| `feature` | 设为推荐 | - |
+| `unfeature` | 取消推荐 | - |
+| `access` | 修改可见性 | `visibility: "public"` |
+| `addTag` | 添加标签 | `tags: [{id: "..."}]` |
+
+**批量删除**:
+
+```http
+DELETE /ghost/api/admin/posts/
+Authorization: Bearer {token}
+```
+
+**请求体**:
+
+```json
+{
+  "filter": "status:draft+created_at:<2025-01-01"
+}
+```
+
+---
+
+### Users (用户管理)
+
+#### 浏览用户列表
+
+```http
+GET /ghost/api/admin/users/
+Authorization: Bearer {token}
+```
+
+**查询参数**:
+
+```
+?include=roles           # 包含角色信息
+?filter=status:active    # 过滤活跃用户
+?limit=20                # 每页 20 个
+```
+
+**响应**:
+
+```json
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "Ghost Admin",
+      "slug": "ghost-admin",
+      "email": "admin@example.com",
+      "profile_image": null,
+      "cover_image": null,
+      "bio": null,
+      "website": null,
+      "location": null,
+      "facebook": null,
+      "twitter": null,
+      "status": "active",
+      "visibility": "public",
+      "created_at": "2026-01-01T00:00:00.000Z",
+      "updated_at": "2026-01-26T12:00:00.000Z",
+      "roles": [
+        {
+          "id": "1",
+          "name": "Owner",
+          "description": "Site owner"
+        }
+      ]
+    }
+  ]
+}
+```
+
+---
+
+#### 获取单个用户
+
+```http
+GET /ghost/api/admin/users/:id/
+Authorization: Bearer {token}
+```
+
+**其他查询方式**:
+
+```http
+# 通过 slug
+GET /ghost/api/admin/users/slug/:slug/
+
+# 通过 email
+GET /ghost/api/admin/users/email/:email/
+```
+
+---
+
+#### 更新用户
+
+```http
+PUT /ghost/api/admin/users/:id/
+Authorization: Bearer {token}
+Content-Type: application/json
+```
+
+**请求体**:
+
+```json
+{
+  "users": [
+    {
+      "name": "Updated Name",
+      "bio": "This is my bio",
+      "website": "https://example.com",
+      "location": "San Francisco",
+      "twitter": "@ghost",
+      "facebook": "ghost"
+    }
+  ]
+}
+```
+
+**可更新字段**:
+
+- `name`, `slug`, `email`
+- `bio`, `website`, `location`
+- `profile_image`, `cover_image`
+- `twitter`, `facebook`
+- `visibility` (public/private)
+
+⚠️ **注意**: 不能通过此端点修改角色，使用专门的角色管理端点
+
+---
+
+#### 修改密码
+
+```http
+PUT /ghost/api/admin/users/password/
+Authorization: Bearer {token}
+Content-Type: application/json
+```
+
+**请求体**:
+
+```json
+{
+  "password": [
+    {
+      "user_id": "1",
+      "oldPassword": "old-password-here",
+      "newPassword": "new-password-here",
+      "ne2Password": "new-password-here"
+    }
+  ]
+}
+```
+
+---
+
+#### 转移所有者
+
+```http
+PUT /ghost/api/admin/users/owner/
+Authorization: Bearer {token}
+Content-Type: application/json
+```
+
+**请求体**:
+
+```json
+{
+  "owner": [
+    {
+      "id": "2"
+    }
+  ]
+}
+```
+
+⚠️ **注意**: 只有当前所有者可以执行此操作
+
+---
+
+### Members (会员管理)
+
+#### 浏览会员列表
+
+```http
+GET /ghost/api/admin/members/
+Authorization: Bearer {token}
+```
+
+**查询参数**:
+
+```
+?filter=status:paid                    # 付费会员
+?filter=newsletters.status:active      # 已订阅
+?search=john@example.com               # 搜索邮箱/姓名
+?order=created_at DESC                 # 按创建时间排序
+```
+
+**响应**:
+
+```json
+{
+  "members": [
+    {
+      "id": "1",
+      "uuid": "...",
+      "email": "member@example.com",
+      "name": "John Doe",
+      "note": null,
+      "status": "free",
+      "subscribed": true,
+      "email_suppression": {
+        "suppressed": false,
+        "info": null
+      },
+      "newsletters": [
+        {
+          "id": "1",
+          "name": "Newsletter",
+          "status": "active"
+        }
+      ],
+      "labels": [
+        {
+          "id": "1",
+          "name": "VIP",
+          "slug": "vip"
+        }
+      ],
+      "tiers": [
+        {
+          "id": "1",
+          "name": "Premium",
+          "slug": "premium"
+        }
+      ],
+      "created_at": "2026-01-01T00:00:00.000Z",
+      "updated_at": "2026-01-26T12:00:00.000Z"
+    }
+  ],
+  "meta": {
+    "pagination": {...}
+  }
+}
+```
+
+---
+
+#### 创建会员
+
+```http
+POST /ghost/api/admin/members/
+Authorization: Bearer {token}
+Content-Type: application/json
+```
+
+**请求体**:
+
+```json
+{
+  "members": [
+    {
+      "email": "new-member@example.com",
+      "name": "New Member",
+      "note": "VIP customer",
+      "subscribed": true,
+      "labels": [
+        {
+          "name": "VIP"
+        }
+      ],
+      "newsletters": [
+        {
+          "id": "1"
+        }
+      ]
+    }
+  ]
+}
+```
+
+**响应**: `201 Created` + 会员对象
+
+---
+
+#### 更新会员
+
+```http
+PUT /ghost/api/admin/members/:id/
+Authorization: Bearer {token}
+Content-Type: application/json
+```
+
+**请求体**:
+
+```json
+{
+  "members": [
+    {
+      "name": "Updated Name",
+      "note": "Updated note",
+      "labels": [
+        {
+          "name": "Premium"
+        }
+      ]
+    }
+  ]
+}
+```
+
+---
+
+#### 创建订阅
+
+```http
+POST /ghost/api/admin/members/:id/subscriptions/
+Authorization: Bearer {token}
+Content-Type: application/json
+```
+
+**请求体**:
+
+```json
+{
+  "tier_id": "507f1f77bcf86cd799439011",
+  "source": "external",
+  "cancel_at_period_end": false
+}
+```
+
+---
+
+#### 会员统计
+
+```http
+GET /ghost/api/admin/members/stats/count/
+Authorization: Bearer {token}
+```
+
+**响应**:
+
+```json
+{
+  "total": 1250,
+  "total_in_range": 42,
+  "new_today": 5,
+  "resource": "members",
+  "data": [
+    {
+      "date": "2026-01-26",
+      "free": 850,
+      "paid": 400,
+      "comped": 0
+    }
+  ]
+}
+```
+
+---
+
+### Tags (标签管理)
+
+#### 浏览标签
+
+```http
+GET /ghost/api/admin/tags/
+Authorization: Bearer {token}
+```
+
+**响应**:
+
+```json
+{
+  "tags": [
+    {
+      "id": "1",
+      "name": "News",
+      "slug": "news",
+      "description": "News articles",
+      "feature_image": null,
+      "visibility": "public",
+      "og_image": null,
+      "og_title": null,
+      "og_description": null,
+      "twitter_image": null,
+      "twitter_title": null,
+      "twitter_description": null,
+      "meta_title": null,
+      "meta_description": null,
+      "canonical_url": null,
+      "accent_color": null,
+      "created_at": "2026-01-01T00:00:00.000Z",
+      "updated_at": "2026-01-26T12:00:00.000Z"
+    }
+  ]
+}
+```
+
+---
+
+#### 创建标签
+
+```http
+POST /ghost/api/admin/tags/
+Authorization: Bearer {token}
+Content-Type: application/json
+```
+
+**请求体**:
+
+```json
+{
+  "tags": [
+    {
+      "name": "Technology",
+      "slug": "technology",
+      "description": "Tech articles",
+      "accent_color": "#0066CC"
+    }
+  ]
+}
+```
+
+---
+
+### Settings (系统设置)
+
+#### 获取所有设置
+
+```http
+GET /ghost/api/admin/settings/
+Authorization: Bearer {token}
+```
+
+**响应**:
+
+```json
+{
+  "settings": [
+    {
+      "key": "title",
+      "value": "My Ghost Site"
+    },
+    {
+      "key": "description",
+      "value": "Thoughts, stories and ideas"
+    },
+    {
+      "key": "logo",
+      "value": "https://example.com/logo.png"
+    },
+    {
+      "key": "cover_image",
+      "value": null
+    },
+    {
+      "key": "timezone",
+      "value": "Etc/UTC"
+    }
+  ]
+}
+```
+
+---
+
+#### 更新设置
+
+```http
+PUT /ghost/api/admin/settings/
+Authorization: Bearer {token}
+Content-Type: application/json
+```
+
+**请求体**:
+
+```json
+{
+  "settings": [
+    {
+      "key": "title",
+      "value": "New Site Title"
+    },
+    {
+      "key": "description",
+      "value": "Updated description"
+    }
+  ]
+}
+```
+
+---
+
+### 其他端点
+
+#### 图片上传
+
+```http
+POST /ghost/api/admin/images/upload/
+Authorization: Bearer {token}
+Content-Type: multipart/form-data
+```
+
+**请求体**:
+
+```
+file=@/path/to/image.jpg
+```
+
+**响应**:
+
+```json
+{
+  "images": [
+    {
+      "url": "https://example.com/content/images/2026/01/image.jpg",
+      "ref": null
+    }
+  ]
+}
+```
+
+**限制**:
+- 最大文件大小: **10 MB**
+- 支持格式: JPEG, PNG, GIF, WebP, SVG
+
+---
+
+#### 文件上传
+
+```http
+POST /ghost/api/admin/files/upload/
+Authorization: Bearer {token}
+Content-Type: multipart/form-data
+```
+
+**支持格式**: PDF, ZIP, TXT, CSV, etc.
+
+---
+
+## Content API
+
+### Posts (公开文章)
+
+#### 浏览文章
+
+```http
+GET /ghost/api/content/posts/?key={content_api_key}
+```
+
+**查询参数**: 与 Admin API 相同，但过滤器有限制
+
+**自动过滤**:
+- ✅ 仅返回已发布文章 (`status:published`)
+- ✅ 排除未来的定时发布文章
+- ✅ 根据可见性过滤
+
+**JavaScript SDK**:
+
+```javascript
+const api = new GhostContentAPI({
+  url: 'https://demo.ghost.io',
+  key: '22444f78447824223cefc48062',
+  version: 'v5.0'
+});
+
+// 浏览文章
+const posts = await api.posts.browse({
+  limit: 5,
+  include: 'tags,authors',
+  filter: 'tag:news'
+});
+
+// 获取单个文章
+const post = await api.posts.read({
+  slug: 'my-post'
+}, {
+  include: 'tags,authors'
+});
+```
+
+---
+
+### Pages (页面)
+
+```http
+GET /ghost/api/content/pages/?key={content_api_key}
+```
+
+**用法与 Posts 相同**
+
+---
+
+### Tags (标签)
+
+```http
+GET /ghost/api/content/tags/?key={content_api_key}
+```
+
+**示例**:
+
+```javascript
+const tags = await api.tags.browse({
+  limit: 'all',
+  include: 'count.posts'
+});
+```
+
+---
+
+### Authors (作者)
+
+```http
+GET /ghost/api/content/authors/?key={content_api_key}
+```
+
+**示例**:
+
+```javascript
+const authors = await api.authors.browse({
+  include: 'count.posts'
+});
+```
+
+---
+
+### Settings (公开设置)
+
+```http
+GET /ghost/api/content/settings/?key={content_api_key}
+```
+
+**响应**: 仅返回公开设置 (title, description, logo, etc.)
+
+---
+
+### Tiers (会员层级)
+
+```http
+GET /ghost/api/content/tiers/?key={content_api_key}
+```
+
+**响应**:
+
+```json
+{
+  "tiers": [
+    {
+      "id": "1",
+      "name": "Free",
+      "slug": "free",
+      "description": null,
+      "active": true,
+      "type": "free",
+      "welcome_page_url": null,
+      "visibility": "public",
+      "benefits": []
+    },
+    {
+      "id": "2",
+      "name": "Premium",
+      "slug": "premium",
+      "description": "Premium membership",
+      "active": true,
+      "type": "paid",
+      "monthly_price": 500,
+      "yearly_price": 5000,
+      "currency": "USD",
+      "visibility": "public",
+      "benefits": [
+        "Access to all premium content",
+        "Weekly newsletter"
+      ]
+    }
+  ]
+}
+```
+
+---
+
+## Members API
+
+### 发送 Magic Link
+
+```http
+POST /members/api/send-magic-link
+Content-Type: application/json
+```
+
+**请求体**:
+
+```json
+{
+  "email": "member@example.com",
+  "emailType": "signin"
+}
+```
+
+**emailType 选项**:
+- `signin` - 登录链接
+- `signup` - 注册链接
+- `subscribe` - 订阅链接
+
+**响应**:
+
+```json
+{
+  "success": true
+}
+```
+
+---
+
+### 获取当前会员信息
+
+```http
+GET /members/api/member/
+Cookie: ghost-members-ssr=...
+```
+
+**响应**:
+
+```json
+{
+  "uuid": "...",
+  "email": "member@example.com",
+  "name": "John Doe",
+  "firstname": "John",
+  "avatar_image": null,
+  "subscriptions": [
+    {
+      "id": "sub_...",
+      "customer": {
+        "id": "cus_...",
+        "name": "John Doe",
+        "email": "member@example.com"
+      },
+      "plan": {
+        "id": "price_...",
+        "nickname": "Premium",
+        "amount": 500,
+        "interval": "month",
+        "currency": "USD"
+      },
+      "status": "active",
+      "start_date": "2026-01-01T00:00:00.000Z",
+      "current_period_end": "2026-02-01T00:00:00.000Z",
+      "cancel_at_period_end": false
+    }
+  ]
+}
+```
+
+---
+
+### 更新会员信息
+
+```http
+PUT /members/api/member/
+Cookie: ghost-members-ssr=...
+Content-Type: application/json
+```
+
+**请求体**:
+
+```json
+{
+  "name": "Updated Name",
+  "subscribed": true,
+  "newsletters": [
+    {
+      "id": "1"
+    }
+  ]
+}
+```
+
+---
+
+### 创建 Stripe 支付会话
+
+```http
+POST /members/api/create-stripe-checkout-session
+Cookie: ghost-members-ssr=...
+Content-Type: application/json
+```
+
+**请求体**:
+
+```json
+{
+  "priceId": "price_1234567890",
+  "successUrl": "https://example.com/welcome/",
+  "cancelUrl": "https://example.com/pricing/"
+}
+```
+
+**响应**:
+
+```json
+{
+  "sessionId": "cs_test_...",
+  "publicKey": "pk_test_..."
+}
+```
+
+**前端集成**:
+
+```javascript
+const stripe = Stripe(publicKey);
+stripe.redirectToCheckout({
+  sessionId: sessionId
+});
+```
+
+---
+
+### 取消订阅
+
+```http
+PUT /members/api/subscriptions/:subscription_id/
+Cookie: ghost-members-ssr=...
+Content-Type: application/json
+```
+
+**请求体**:
+
+```json
+{
+  "cancel_at_period_end": true
+}
+```
+
+---
+
+## 通用规范
+
+### 分页
+
+**请求**:
+
+```http
+GET /ghost/api/admin/posts/?limit=15&page=2
+```
+
+**响应元数据**:
+
+```json
+{
+  "meta": {
+    "pagination": {
+      "page": 2,
+      "limit": 15,
+      "pages": 10,
+      "total": 142,
+      "next": 3,
+      "prev": 1
+    }
+  }
+}
+```
+
+### 过滤 (NQL)
+
+Ghost 使用 **NQL (Ghost Query Language)** 进行过滤：
+
+**基本语法**:
+
+```
+field:value              # 等于
+field:-value             # 不等于
+field:>value             # 大于
+field:>=value            # 大于等于
+field:<value             # 小于
+field:<=value            # 小于等于
+field:~value             # 包含 (字符串)
+field:[value1,value2]    # IN
+```
+
+**逻辑运算符**:
+
+```
++                        # AND
+,                        # OR
+()                       # 分组
+```
+
+**示例**:
+
+```
+# 已发布且推荐
+status:published+featured:true
+
+# 特定标签或作者
+tag:news,author:john
+
+# 日期范围
+published_at:>='2026-01-01'+published_at:<'2026-02-01'
+
+# 复杂组合
+(tag:news,tag:tech)+status:published+featured:true
+
+# 关联过滤
+author.slug:john
+tags.slug:news
+```
+
+---
+
+### 包含关联 (Include)
+
+**语法**:
+
+```
+?include=relation1,relation2,relation3
+```
+
+**Posts 可用关联**:
+
+```
+tags                     # 标签
+authors                  # 作者
+authors.roles            # 作者的角色
+email                    # 关联的邮件
+newsletter               # 关联的 Newsletter
+tiers                    # 会员层级
+count.clicks             # 点击统计
+count.conversions        # 转化统计
+count.signups            # 注册统计
+count.paid_conversions   # 付费转化统计
+sentiment                # 情感分析
+count.positive_feedback  # 正面反馈统计
+count.negative_feedback  # 负面反馈统计
+post_revisions           # 文章修订历史
+post_revisions.author    # 修订作者
+```
+
+**示例**:
+
+```http
+GET /ghost/api/admin/posts/?include=tags,authors,count.clicks
+```
+
+---
+
+### 字段选择
+
+**语法**:
+
+```
+?fields=field1,field2,field3
+```
+
+**示例**:
+
+```http
+# 仅返回标题和 slug
+GET /ghost/api/content/posts/?key=...&fields=title,slug
+
+# 响应
+{
+  "posts": [
+    {
+      "title": "My Post",
+      "slug": "my-post"
+    }
+  ]
+}
+```
+
+---
+
+### 格式选择
+
+**语法**:
+
+```
+?formats=html,plaintext
+```
+
+**可用格式**:
+- `html` - HTML 渲染后的内容
+- `plaintext` - 纯文本内容
+- `mobiledoc` - Mobiledoc JSON
+- `lexical` - Lexical JSON
+
+**默认**: `html,plaintext`
+
+---
+
+### 排序
+
+**语法**:
+
+```
+?order=field [ASC|DESC]
+```
+
+**示例**:
+
+```
+?order=published_at DESC        # 按发布时间倒序
+?order=title ASC                # 按标题正序
+?order=created_at DESC          # 按创建时间倒序
+```
+
+---
+
+## 错误处理
+
+### 错误响应格式
+
+```json
+{
+  "errors": [
+    {
+      "message": "Resource not found.",
+      "type": "NotFoundError",
+      "id": "507f1f77bcf86cd799439011",
+      "code": null,
+      "property": null,
+      "context": "Post not found with id: 507f1f77bcf86cd799439011",
+      "help": "Check the post ID and try again",
+      "errorDetails": []
+    }
+  ]
+}
+```
+
+### HTTP 状态码
+
+| 状态码 | 名称 | 说明 |
+|--------|------|------|
+| **2xx** | **成功** | |
+| 200 | OK | 请求成功 |
+| 201 | Created | 资源创建成功 |
+| 204 | No Content | 删除成功（无返回内容） |
+| **4xx** | **客户端错误** | |
+| 400 | Bad Request | 请求格式错误 |
+| 401 | Unauthorized | 未认证或 Token 无效 |
+| 403 | Forbidden | 无权限访问资源 |
+| 404 | Not Found | 资源不存在 |
+| 422 | Unprocessable Entity | 验证失败 |
+| 429 | Too Many Requests | 超出速率限制 |
+| **5xx** | **服务器错误** | |
+| 500 | Internal Server Error | 服务器内部错误 |
+| 503 | Service Unavailable | 服务暂时不可用 |
+
+---
+
+### 常见错误
+
+#### 认证失败 (401)
+
+```json
+{
+  "errors": [
+    {
+      "message": "Authentication failed",
+      "type": "UnauthorizedError"
+    }
+  ]
+}
+```
+
+**原因**:
+- Token 过期
+- Token 签名无效
+- 缺少 Authorization 头
+- API Key 不正确
+
+---
+
+#### 权限不足 (403)
+
+```json
+{
+  "errors": [
+    {
+      "message": "You do not have permission to perform this action",
+      "type": "NoPermissionError"
+    }
+  ]
+}
+```
+
+**原因**:
+- 用户角色权限不足
+- 尝试修改不安全属性
+- 资源不属于当前用户
+
+---
+
+#### 验证错误 (422)
+
+```json
+{
+  "errors": [
+    {
+      "message": "Validation error, cannot edit post.",
+      "type": "ValidationError",
+      "property": "title",
+      "context": "Title cannot be blank"
+    }
+  ]
+}
+```
+
+**原因**:
+- 必填字段缺失
+- 字段值不符合规则
+- 字段长度超限
+- 格式不正确
+
+---
+
+#### 速率限制 (429)
+
+```json
+{
+  "errors": [
+    {
+      "message": "Too many requests.",
+      "type": "TooManyRequestsError"
+    }
+  ]
+}
+```
+
+**响应头**:
+
+```
+X-RateLimit-Limit: 1000
+X-RateLimit-Remaining: 0
+X-RateLimit-Reset: 1706274000
+Retry-After: 3600
+```
+
+---
+
+## 最佳实践
+
+### 1. 使用官方 SDK
+
+**JavaScript/Node.js**:
+
+```bash
+npm install @tryghost/admin-api
+npm install @tryghost/content-api
+```
+
+```javascript
+// Admin API
+const GhostAdminAPI = require('@tryghost/admin-api');
+const api = new GhostAdminAPI({
+  url: 'https://demo.ghost.io',
+  key: 'your_admin_api_key',
+  version: 'v5.0'
+});
+
+// Content API
+const GhostContentAPI = require('@tryghost/content-api');
+const api = new GhostContentAPI({
+  url: 'https://demo.ghost.io',
+  key: 'your_content_api_key',
+  version: 'v5.0'
+});
+```
+
+---
+
+### 2. 处理分页
+
+```javascript
+async function getAllPosts() {
+  const allPosts = [];
+  let page = 1;
+  let hasMore = true;
+
+  while (hasMore) {
+    const result = await api.posts.browse({
+      limit: 100,
+      page: page
+    });
+
+    allPosts.push(...result);
+
+    // 检查是否还有更多页
+    hasMore = result.meta.pagination.pages > page;
+    page++;
+  }
+
+  return allPosts;
+}
+```
+
+---
+
+### 3. 错误处理
+
+```javascript
+try {
+  const post = await api.posts.read({id: postId});
+} catch (error) {
+  if (error.response) {
+    // API 返回错误
+    console.error('API Error:', error.response.data.errors);
+
+    if (error.response.status === 404) {
+      console.error('Post not found');
+    } else if (error.response.status === 401) {
+      console.error('Authentication failed');
+    }
+  } else {
+    // 网络错误或其他错误
+    console.error('Error:', error.message);
+  }
+}
+```
+
+---
+
+### 4. 使用 Include 优化请求
+
+```javascript
+// ❌ 差: 多次请求
+const posts = await api.posts.browse();
+for (const post of posts) {
+  const tags = await api.tags.read({id: post.tags[0].id});
+  const author = await api.authors.read({id: post.authors[0].id});
+}
+
+// ✅ 好: 一次请求
+const posts = await api.posts.browse({
+  include: 'tags,authors'
+});
+```
+
+---
+
+### 5. 速率限制处理
+
+```javascript
+async function fetchWithRetry(fn, maxRetries = 3) {
+  let retries = 0;
+
+  while (retries < maxRetries) {
+    try {
+      return await fn();
+    } catch (error) {
+      if (error.response?.status === 429) {
+        const retryAfter = parseInt(error.response.headers['retry-after'] || '60');
+        console.log(`Rate limited. Retrying after ${retryAfter}s...`);
+
+        await new Promise(resolve => setTimeout(resolve, retryAfter * 1000));
+        retries++;
+      } else {
+        throw error;
+      }
+    }
+  }
+
+  throw new Error('Max retries exceeded');
+}
+
+// 使用
+const posts = await fetchWithRetry(() =>
+  api.posts.browse({limit: 100})
+);
+```
+
+---
+
+### 6. 批量操作优化
+
+```javascript
+// ❌ 差: 逐个创建
+for (const data of postData) {
+  await api.posts.add(data);  // N 次请求
+}
+
+// ✅ 好: 批量处理
+const batchSize = 10;
+for (let i = 0; i < postData.length; i += batchSize) {
+  const batch = postData.slice(i, i + batchSize);
+
+  await Promise.all(
+    batch.map(data => api.posts.add(data))
+  );
+
+  // 短暂延迟避免速率限制
+  await new Promise(resolve => setTimeout(resolve, 1000));
+}
+```
+
+---
+
+### 7. Webhook 签名验证
+
+```javascript
+const crypto = require('crypto');
+
+function verifyWebhook(payload, signature, secret) {
+  const hmac = crypto.createHmac('sha256', secret);
+  const digest = hmac.update(JSON.stringify(payload)).digest('hex');
+
+  return `sha256=${digest}` === signature;
+}
+
+// Express 中间件
+app.post('/webhook', (req, res) => {
+  const signature = req.headers['x-ghost-signature'];
+  const secret = 'your_webhook_secret';
+
+  if (!verifyWebhook(req.body, signature, secret)) {
+    return res.status(401).send('Invalid signature');
+  }
+
+  // 处理 webhook
+  const {post} = req.body;
+  console.log('Post published:', post.current.title);
+
+  res.sendStatus(200);
+});
+```
+
+---
+
+### 8. 缓存策略
+
+```javascript
+const NodeCache = require('node-cache');
+const cache = new NodeCache({ stdTTL: 600 }); // 10 分钟
+
+async function getCachedPosts() {
+  const cacheKey = 'posts_latest';
+
+  // 检查缓存
+  let posts = cache.get(cacheKey);
+
+  if (!posts) {
+    // 缓存未命中，从 API 获取
+    posts = await api.posts.browse({
+      limit: 10,
+      include: 'tags,authors'
+    });
+
+    // 存入缓存
+    cache.set(cacheKey, posts);
+  }
+
+  return posts;
+}
+
+// 清除缓存 (在 webhook 中)
+app.post('/webhook', (req, res) => {
+  if (req.body['post.published']) {
+    cache.del('posts_latest');
+  }
+  res.sendStatus(200);
+});
+```
+
+---
+
+## 附录
+
+### A. SDK 参考
+
+**官方 SDK**:
+
+| 语言 | 包名 | 文档 |
+|------|------|------|
+| JavaScript | `@tryghost/admin-api`<br>`@tryghost/content-api` | [Docs](https://ghost.org/docs/content-api/) |
+| Python | `ghost-client` | [GitHub](https://github.com/firecat53/ghost-client) |
+| Ruby | `ghost_api` | [GitHub](https://github.com/abelha/ghost-api) |
+| PHP | `ghost-api-client` | [GitHub](https://github.com/digitalcube/ghost-php-api-client) |
+| Go | `go-ghost` | [GitHub](https://github.com/denismakogon/go-ghost) |
+
+---
+
+### B. Postman Collection
+
+导入 Ghost API Postman Collection:
+
+```
+https://www.postman.com/ghost-api/workspace/ghost-admin-api
+```
+
+---
+
+### C. GraphQL API
+
+Ghost 不原生支持 GraphQL，但可以通过第三方工具包装：
+
+- **Gatsby**: `gatsby-source-ghost`
+- **Next.js**: 自定义 GraphQL resolver
+- **Apollo**: 自定义 data source
+
+---
+
+### D. Webhooks 事件
+
+**可用事件**:
+
+| 事件 | 触发时机 | Payload |
+|------|----------|---------|
+| `site.changed` | 站点设置变更 | - |
+| `post.published` | 文章发布 | `post.current` |
+| `post.published.edited` | 已发布文章编辑 | `post.current`, `post.previous` |
+| `post.unpublished` | 取消发布 | `post.previous` |
+| `post.scheduled` | 定时发布 | `post.current` |
+| `post.unscheduled` | 取消定时 | `post.previous` |
+| `post.deleted` | 文章删除 | `post.previous` |
+| `post.added` | 文章创建 | `post.current` |
+| `page.published` | 页面发布 | `page.current` |
+| `page.deleted` | 页面删除 | `page.previous` |
+| `member.added` | 会员注册 | `member.current` |
+| `member.deleted` | 会员删除 | `member.previous` |
+
+---
+
+### E. 限制与配额
+
+**Admin API**:
+- 速率限制: **1000 请求/小时/用户**
+- 最大请求体: **50 MB**
+- 最大响应大小: **50 MB**
+- 批量操作: 最多 **1000** 条记录
+
+**Content API**:
+- 速率限制: **无限制** (仅读取)
+- 最大 limit: **100**
+- 缓存建议: **10 分钟**
+
+**图片上传**:
+- 最大文件大小: **10 MB**
+- 支持格式: JPEG, PNG, GIF, WebP, SVG
+
+**文件上传**:
+- 最大文件大小: **10 MB**
+- 支持格式: PDF, ZIP, TXT, CSV, JSON, XML
+
+---
+
+**文档版本**: 1.0.0
+**最后更新**: 2026-01-26
+**API 版本**: v5.0
+**对应 Ghost 版本**: 6.14.0

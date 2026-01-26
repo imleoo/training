@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1400" height="800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .admin-api { fill: #fef3c7; stroke: #d97706; stroke-width: 2; }
+      .content-api { fill: #dbeafe; stroke: #1e40af; stroke-width: 2; }
+      .members-api { fill: #fce7f3; stroke: #be185d; stroke-width: 2; }
+      .auth-box { fill: #d1fae5; stroke: #059669; stroke-width: 2; }
+      .endpoint-box { fill: #f0f9ff; stroke: #0284c7; stroke-width: 1.5; }
+      .title { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #1e293b; }
+      .subtitle { font-family: Arial, sans-serif; font-size: 11px; fill: #475569; }
+      .method { font-family: monospace; font-size: 10px; font-weight: bold; }
+      .get { fill: #059669; }
+      .post { fill: #0284c7; }
+      .put { fill: #d97706; }
+      .delete { fill: #dc2626; }
+      .arrow { stroke: #64748b; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .section-title { font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; fill: #0f172a; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#64748b" />
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="700" y="35" text-anchor="middle" class="section-title">Ghost CMS API 架构</text>
+
+  <!-- Authentication Layer -->
+  <text x="50" y="70" class="section-title">认证层</text>
+
+  <rect x="50" y="80" width="280" height="120" class="auth-box" rx="5"/>
+  <text x="190" y="105" text-anchor="middle" class="title">JWT 认证 (Admin API)</text>
+  <text x="70" y="125" class="subtitle">• Header: Authorization: Bearer {token}</text>
+  <text x="70" y="145" class="subtitle">• Token 有效期: 12 小时</text>
+  <text x="70" y="165" class="subtitle">• Scope: Admin 操作</text>
+  <text x="70" y="185" class="subtitle">• 刷新机制: 重新登录</text>
+
+  <rect x="360" y="80" width="280" height="120" class="auth-box" rx="5"/>
+  <text x="500" y="105" text-anchor="middle" class="title">API Key 认证 (Content API)</text>
+  <text x="380" y="125" class="subtitle">• Query: ?key={content_api_key}</text>
+  <text x="380" y="145" class="subtitle">• 只读访问</text>
+  <text x="380" y="165" class="subtitle">• 无过期时间</text>
+  <text x="380" y="185" class="subtitle">• 公开内容访问</text>
+
+  <rect x="670" y="80" width="280" height="120" class="auth-box" rx="5"/>
+  <text x="810" y="105" text-anchor="middle" class="title">Cookie Session (Members)</text>
+  <text x="690" y="125" class="subtitle">• Cookie: ghost-members-ssr</text>
+  <text x="690" y="145" class="subtitle">• 有效期: 6 个月</text>
+  <text x="690" y="165" class="subtitle">• Scope: 会员内容访问</text>
+  <text x="690" y="185" class="subtitle">• Magic Link 登录</text>
+
+  <!-- API Layers -->
+  <path d="M 190 200 L 190 240" class="arrow"/>
+  <path d="M 500 200 L 500 240" class="arrow"/>
+  <path d="M 810 200 L 810 240" class="arrow"/>
+
+  <!-- Admin API -->
+  <text x="50" y="230" class="section-title">Admin API</text>
+  <text x="50" y="250" class="subtitle">/ghost/api/admin/ (需要认证)</text>
+
+  <rect x="50" y="260" width="400" height="460" class="admin-api" rx="5"/>
+
+  <!-- Posts -->
+  <text x="65" y="280" class="title">Posts</text>
+  <rect x="65" y="285" width="370" height="85" class="endpoint-box" rx="3"/>
+  <text x="75" y="300" class="method get">GET</text>
+  <text x="110" y="300" class="subtitle">/posts/ - 浏览文章列表</text>
+  <text x="75" y="315" class="method get">GET</text>
+  <text x="110" y="315" class="subtitle">/posts/:id - 获取单个文章</text>
+  <text x="75" y="330" class="method post">POST</text>
+  <text x="110" y="330" class="subtitle">/posts/ - 创建文章</text>
+  <text x="75" y="345" class="method put">PUT</text>
+  <text x="110" y="345" class="subtitle">/posts/:id - 更新文章</text>
+  <text x="75" y="360" class="method delete">DEL</text>
+  <text x="110" y="360" class="subtitle">/posts/:id - 删除文章</text>
+
+  <!-- Users -->
+  <text x="65" y="390" class="title">Users</text>
+  <rect x="65" y="395" width="370" height="70" class="endpoint-box" rx="3"/>
+  <text x="75" y="410" class="method get">GET</text>
+  <text x="110" y="410" class="subtitle">/users/ - 用户列表</text>
+  <text x="75" y="425" class="method get">GET</text>
+  <text x="110" y="425" class="subtitle">/users/:id - 用户详情</text>
+  <text x="75" y="440" class="method put">PUT</text>
+  <text x="110" y="440" class="subtitle">/users/:id - 更新用户</text>
+  <text x="75" y="455" class="method put">PUT</text>
+  <text x="110" y="455" class="subtitle">/users/password - 修改密码</text>
+
+  <!-- Members -->
+  <text x="65" y="485" class="title">Members</text>
+  <rect x="65" y="490" width="370" height="85" class="endpoint-box" rx="3"/>
+  <text x="75" y="505" class="method get">GET</text>
+  <text x="110" y="505" class="subtitle">/members/ - 会员列表</text>
+  <text x="75" y="520" class="method post">POST</text>
+  <text x="110" y="520" class="subtitle">/members/ - 创建会员</text>
+  <text x="75" y="535" class="method put">PUT</text>
+  <text x="110" y="535" class="subtitle">/members/:id - 更新会员</text>
+  <text x="75" y="550" class="method post">POST</text>
+  <text x="110" y="550" class="subtitle">/members/:id/subscriptions/ - 创建订阅</text>
+  <text x="75" y="565" class="method get">GET</text>
+  <text x="110" y="565" class="subtitle">/members/stats/count - 会员统计</text>
+
+  <!-- Settings -->
+  <text x="65" y="595" class="title">Settings &amp; Others</text>
+  <rect x="65" y="600" width="370" height="100" class="endpoint-box" rx="3"/>
+  <text x="75" y="615" class="method get">GET</text>
+  <text x="110" y="615" class="subtitle">/settings/ - 系统设置</text>
+  <text x="75" y="630" class="method get">GET</text>
+  <text x="110" y="630" class="subtitle">/tags/ - 标签管理</text>
+  <text x="75" y="645" class="method get">GET</text>
+  <text x="110" y="645" class="subtitle">/newsletters/ - 邮件通讯</text>
+  <text x="75" y="660" class="method get">GET</text>
+  <text x="110" y="660" class="subtitle">/tiers/ - 会员层级</text>
+  <text x="75" y="675" class="method post">POST</text>
+  <text x="110" y="675" class="subtitle">/images/upload - 图片上传</text>
+  <text x="75" y="690" class="method get">GET</text>
+  <text x="110" y="690" class="subtitle">/stats/* - 统计数据</text>
+
+  <!-- Content API -->
+  <text x="480" y="230" class="section-title">Content API</text>
+  <text x="480" y="250" class="subtitle">/ghost/api/content/ (只读，公开)</text>
+
+  <rect x="480" y="260" width="400" height="250" class="content-api" rx="5"/>
+
+  <text x="495" y="280" class="title">Public Resources</text>
+  <rect x="495" y="285" width="370" height="130" class="endpoint-box" rx="3"/>
+  <text x="505" y="300" class="method get">GET</text>
+  <text x="540" y="300" class="subtitle">/posts/ - 已发布文章</text>
+  <text x="505" y="315" class="method get">GET</text>
+  <text x="540" y="315" class="subtitle">/posts/:id - 文章详情</text>
+  <text x="505" y="330" class="method get">GET</text>
+  <text x="540" y="330" class="subtitle">/posts/slug/:slug - 通过 slug 获取</text>
+  <text x="505" y="345" class="method get">GET</text>
+  <text x="540" y="345" class="subtitle">/pages/ - 页面列表</text>
+  <text x="505" y="360" class="method get">GET</text>
+  <text x="540" y="360" class="subtitle">/tags/ - 标签列表</text>
+  <text x="505" y="375" class="method get">GET</text>
+  <text x="540" y="375" class="subtitle">/authors/ - 作者列表</text>
+  <text x="505" y="390" class="method get">GET</text>
+  <text x="540" y="390" class="subtitle">/settings/ - 公开设置</text>
+  <text x="505" y="405" class="method get">GET</text>
+  <text x="540" y="405" class="subtitle">/tiers/ - 会员层级信息</text>
+
+  <text x="495" y="435" class="title">Query Parameters</text>
+  <rect x="495" y="440" width="370" height="60" class="endpoint-box" rx="3"/>
+  <text x="505" y="455" class="subtitle">• key={content_api_key} (必需)</text>
+  <text x="505" y="470" class="subtitle">• include=tags,authors (包含关联)</text>
+  <text x="505" y="485" class="subtitle">• filter=tag:news (NQL 过滤)</text>
+  <text x="505" y="500" class="subtitle">• limit=15&amp;amp;page=2 (分页)</text>
+
+  <!-- Members API -->
+  <text x="910" y="230" class="section-title">Members API</text>
+  <text x="910" y="250" class="subtitle">/members/api/ (会员操作)</text>
+
+  <rect x="910" y="260" width="420" height="280" class="members-api" rx="5"/>
+
+  <text x="925" y="280" class="title">Authentication</text>
+  <rect x="925" y="285" width="390" height="55" class="endpoint-box" rx="3"/>
+  <text x="935" y="300" class="method post">POST</text>
+  <text x="970" y="300" class="subtitle">/send-magic-link - 发送登录链接</text>
+  <text x="935" y="315" class="method get">GET</text>
+  <text x="970" y="315" class="subtitle">/session?token={token} - 验证登录</text>
+  <text x="935" y="330" class="method delete">DEL</text>
+  <text x="970" y="330" class="subtitle">/session - 退出登录</text>
+
+  <text x="925" y="360" class="title">Member Operations</text>
+  <rect x="925" y="365" width="390" height="55" class="endpoint-box" rx="3"/>
+  <text x="935" y="380" class="method get">GET</text>
+  <text x="970" y="380" class="subtitle">/member/ - 当前会员信息</text>
+  <text x="935" y="395" class="method put">PUT</text>
+  <text x="970" y="395" class="subtitle">/member/ - 更新会员信息</text>
+  <text x="935" y="410" class="method post">POST</text>
+  <text x="970" y="410" class="subtitle">/member/newsletters/ - 订阅管理</text>
+
+  <text x="925" y="440" class="title">Subscriptions</text>
+  <rect x="925" y="445" width="390" height="70" class="endpoint-box" rx="3"/>
+  <text x="935" y="460" class="method post">POST</text>
+  <text x="970" y="460" class="subtitle">/create-stripe-checkout - 创建支付会话</text>
+  <text x="935" y="475" class="method get">GET</text>
+  <text x="970" y="475" class="subtitle">/subscriptions/ - 订阅列表</text>
+  <text x="935" y="490" class="method put">PUT</text>
+  <text x="970" y="490" class="subtitle">/subscriptions/:id - 更新订阅</text>
+  <text x="935" y="505" class="method post">POST</text>
+  <text x="970" y="505" class="subtitle">/subscriptions/:id/cancel - 取消订阅</text>
+
+  <!-- Webhooks -->
+  <text x="50" y="750" class="section-title">Webhooks (外部集成)</text>
+
+  <rect x="50" y="760" width="600" height="30" class="endpoint-box" rx="3"/>
+  <text x="60" y="778" class="method post">POST</text>
+  <text x="95" y="778" class="subtitle">/members/webhooks/stripe - Stripe 回调 (subscription.created, invoice.paid, etc.)</text>
+
+  <rect x="680" y="760" width="650" height="30" class="endpoint-box" rx="3"/>
+  <text x="690" y="778" class="method post">POST</text>
+  <text x="725" y="778" class="subtitle">{your_webhook_url} - Ghost Webhook 事件推送 (post.published, member.added, etc.)</text>
+
+  <!-- Legend -->
+  <text x="50" y="730" class="subtitle">图例: </text>
+  <text x="100" y="730" class="method get">GET</text>
+  <text x="140" y="730" class="subtitle">= 读取 | </text>
+  <text x="200" y="730" class="method post">POST</text>
+  <text x="240" y="730" class="subtitle">= 创建 | </text>
+  <text x="300" y="730" class="method put">PUT</text>
+  <text x="340" y="730" class="subtitle">= 更新 | </text>
+  <text x="400" y="730" class="method delete">DEL</text>
+  <text x="440" y="730" class="subtitle">= 删除</text>
+</svg>
