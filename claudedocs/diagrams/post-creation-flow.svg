@@ -1,0 +1,156 @@
+<svg width="1000" height="800" xmlns="http://www.w3.org/2000/svg">
+  <!-- 定义渐变和阴影 -->
+  <defs>
+    <linearGradient id="stepGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="successGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+    </linearGradient>
+    
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="3" dy="3" stdDeviation="4" flood-color="#000" flood-opacity="0.2"/>
+    </filter>
+    
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#374151"/>
+    </marker>
+  </defs>
+  
+  <!-- 背景 -->
+  <rect width="1000" height="800" fill="#f8fafc"/>
+  
+  <!-- 标题 -->
+  <text x="500" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="26" font-weight="bold" fill="#1e293b">文章创建请求完整流程</text>
+  <text x="500" y="60" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#64748b">从 HTTP 请求到数据库持久化的每一个环节</text>
+  
+  <!-- 步骤1: HTTP Request -->
+  <rect x="50" y="90" width="200" height="70" rx="8" fill="#ef4444" filter="url(#shadow)"/>
+  <text x="150" y="120" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">步骤 1</text>
+  <text x="150" y="140" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white">HTTP Request</text>
+  <text x="150" y="155" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">POST /ghost/api/admin/posts/</text>
+  
+  <!-- 箭头 -->
+  <line x1="250" y1="125" x2="300" y2="125" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- 步骤2: Middleware Chain -->
+  <rect x="300" y="90" width="200" height="70" rx="8" fill="#f59e0b" filter="url(#shadow)"/>
+  <text x="400" y="120" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">步骤 2</text>
+  <text x="400" y="140" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white">Middleware Chain</text>
+  <text x="400" y="155" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">Body Parser, CORS, Auth</text>
+  
+  <!-- 箭头 -->
+  <line x1="500" y1="125" x2="550" y2="125" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- 步骤3: API Endpoint -->
+  <rect x="550" y="90" width="200" height="70" rx="8" fill="#8b5cf6" filter="url(#shadow)"/>
+  <text x="650" y="120" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">步骤 3</text>
+  <text x="650" y="140" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white">API Endpoint</text>
+  <text x="650" y="155" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">posts.add() Handler</text>
+  
+  <!-- 向下箭头 -->
+  <line x1="650" y1="160" x2="650" y2="190" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- 步骤4: Model Layer -->
+  <rect x="550" y="190" width="200" height="70" rx="8" fill="#06b6d4" filter="url(#shadow)"/>
+  <text x="650" y="220" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">步骤 4</text>
+  <text x="650" y="240" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white">Model Layer</text>
+  <text x="650" y="255" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">Post.add()</text>
+  
+  <!-- 向左箭头 -->
+  <line x1="550" y1="225" x2="500" y2="225" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- 步骤5: Lifecycle Hooks -->
+  <rect x="300" y="190" width="200" height="70" rx="8" fill="#ec4899" filter="url(#shadow)"/>
+  <text x="400" y="220" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">步骤 5</text>
+  <text x="400" y="240" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white">Lifecycle Hooks</text>
+  <text x="400" y="255" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">onCreating, onSaving</text>
+  
+  <!-- 向左箭头 -->
+  <line x1="300" y1="225" x2="250" y2="225" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- 步骤6: Database -->
+  <rect x="50" y="190" width="200" height="70" rx="8" fill="#64748b" filter="url(#shadow)"/>
+  <text x="150" y="220" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">步骤 6</text>
+  <text x="150" y="240" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white">Database</text>
+  <text x="150" y="255" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">SQL INSERT</text>
+  
+  <!-- 向下箭头 -->
+  <line x1="150" y1="260" x2="150" y2="290" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- 步骤7: Event Trigger -->
+  <rect x="50" y="290" width="200" height="70" rx="8" fill="#14b8a6" filter="url(#shadow)"/>
+  <text x="150" y="320" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">步骤 7</text>
+  <text x="150" y="340" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white">Event Trigger</text>
+  <text x="150" y="355" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">post.added Event</text>
+  
+  <!-- 向右箭头 -->
+  <line x1="250" y1="325" x2="300" y2="325" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- 步骤8: Response -->
+  <rect x="300" y="290" width="200" height="70" rx="8" fill="url(#successGradient)" filter="url(#shadow)"/>
+  <text x="400" y="320" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">步骤 8</text>
+  <text x="400" y="340" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white">Response</text>
+  <text x="400" y="355" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">201 Created + JSON</text>
+  
+  <!-- 详细说明区域 -->
+  <rect x="550" y="290" width="400" height="450" rx="10" fill="white" stroke="#e2e8f0" stroke-width="2" filter="url(#shadow)"/>
+  
+  <text x="750" y="320" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#1e293b">每个步骤的详细说明</text>
+  
+  <!-- 步骤详情 -->
+  <text x="570" y="355" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ef4444">步骤 1: HTTP Request</text>
+  <text x="570" y="370" font-family="Arial, sans-serif" font-size="10" fill="#64748b">客户端发送 POST 请求，包含文章数据和 JWT Token</text>
+  
+  <text x="570" y="395" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#f59e0b">步骤 2: Middleware Chain</text>
+  <text x="570" y="410" font-family="Arial, sans-serif" font-size="10" fill="#64748b">Body Parser 解析 JSON，CORS 处理跨域，JWT 验证用户身份</text>
+  
+  <text x="570" y="435" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#8b5cf6">步骤 3: API Endpoint</text>
+  <text x="570" y="450" font-family="Arial, sans-serif" font-size="10" fill="#64748b">路由匹配 /posts/，调用 posts.add() 端点处理器</text>
+  
+  <text x="570" y="475" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#06b6d4">步骤 4: Model Layer</text>
+  <text x="570" y="490" font-family="Arial, sans-serif" font-size="10" fill="#64748b">调用 Post.add() 方法，启动模型生命周期</text>
+  
+  <text x="570" y="515" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ec4899">步骤 5: Lifecycle Hooks</text>
+  <text x="570" y="530" font-family="Arial, sans-serif" font-size="10" fill="#64748b">onCreating: 生成 UUID, slug</text>
+  <text x="570" y="545" font-family="Arial, sans-serif" font-size="10" fill="#64748b">onSaving: 验证内容，生成 HTML，URL 转换</text>
+  
+  <text x="570" y="570" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#64748b">步骤 6: Database</text>
+  <text x="570" y="585" font-family="Arial, sans-serif" font-size="10" fill="#64748b">执行 SQL INSERT，写入 posts 表和关联表</text>
+  <text x="570" y="600" font-family="Arial, sans-serif" font-size="10" fill="#64748b">事务保证：要么全成功，要么全回滚</text>
+  
+  <text x="570" y="625" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#14b8a6">步骤 7: Event Trigger</text>
+  <text x="570" y="640" font-family="Arial, sans-serif" font-size="10" fill="#64748b">触发 post.added 事件，调用监听器</text>
+  <text x="570" y="655" font-family="Arial, sans-serif" font-size="10" fill="#64748b">Webhook 通知、缓存清除、审计日志</text>
+  
+  <text x="570" y="680" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#10b981">步骤 8: Response</text>
+  <text x="570" y="695" font-family="Arial, sans-serif" font-size="10" fill="#64748b">序列化模型为 JSON，返回 201 状态码</text>
+  <text x="570" y="710" font-family="Arial, sans-serif" font-size="10" fill="#64748b">包含完整的文章数据（关联、计算字段）</text>
+  
+  <!-- 侧边关键点 -->
+  <rect x="50" y="400" width="400" height="340" rx="10" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+  <text x="250" y="430" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#92400e">关键设计决策</text>
+  
+  <text x="70" y="460" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#92400e">✓ 为什么需要事务？</text>
+  <text x="70" y="475" font-family="Arial, sans-serif" font-size="10" fill="#92400e">主记录 + 关联记录必须原子性操作</text>
+  
+  <text x="70" y="500" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#92400e">✓ 为什么需要生命周期钩子？</text>
+  <text x="70" y="515" font-family="Arial, sans-serif" font-size="10" fill="#92400e">自动处理默认值、验证、数据转换</text>
+  
+  <text x="70" y="540" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#92400e">✓ 为什么需要事件系统？</text>
+  <text x="70" y="555" font-family="Arial, sans-serif" font-size="10" fill="#92400e">解耦业务逻辑，支持异步处理</text>
+  
+  <text x="70" y="580" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#92400e">✓ 为什么需要两次查询？</text>
+  <text x="70" y="595" font-family="Arial, sans-serif" font-size="10" fill="#92400e">INSERT 只返回 ID，需要重新获取完整数据</text>
+  
+  <text x="70" y="620" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#92400e">✓ 性能优化点</text>
+  <text x="70" y="635" font-family="Arial, sans-serif" font-size="10" fill="#92400e">• Eager Loading 避免N+1查询</text>
+  <text x="70" y="650" font-family="Arial, sans-serif" font-size="10" fill="#92400e">• 缓存设置读取</text>
+  <text x="70" y="665" font-family="Arial, sans-serif" font-size="10" fill="#92400e">• 批量操作减少数据库往返</text>
+  
+  <text x="70" y="695" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#92400e">✓ 安全检查</text>
+  <text x="70" y="710" font-family="Arial, sans-serif" font-size="10" fill="#92400e">JWT认证、权限验证、数据验证</text>
+</svg>

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" width="800" height="400">
+  <defs>
+    <linearGradient id="entityGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4F46E5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3730A3;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="joinGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#059669;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#047857;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="extendGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#D97706;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#B45309;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity="0.15"/>
+    </filter>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#64748B"/>
+    </marker>
+  </defs>
+
+  <!-- 背景 -->
+  <rect width="800" height="400" fill="#F8FAFC"/>
+
+  <!-- 标题 -->
+  <text x="400" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#1E293B">
+    Ghost 核心实体关系总结
+  </text>
+
+  <!-- ============ USERS 表 ============ -->
+  <g transform="translate(50, 120)" filter="url(#shadow)">
+    <rect width="120" height="50" rx="8" fill="url(#entityGradient)"/>
+    <text x="60" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">users</text>
+    <text x="60" y="45" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#C7D2FE">(staff)</text>
+  </g>
+
+  <!-- ============ POSTS 表 (中心) ============ -->
+  <g transform="translate(340, 120)" filter="url(#shadow)">
+    <rect width="120" height="50" rx="8" fill="url(#entityGradient)"/>
+    <text x="60" y="32" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">posts</text>
+  </g>
+
+  <!-- ============ TAGS 表 ============ -->
+  <g transform="translate(630, 120)" filter="url(#shadow)">
+    <rect width="120" height="50" rx="8" fill="url(#entityGradient)"/>
+    <text x="60" y="32" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">tags</text>
+  </g>
+
+  <!-- ============ posts_authors 关联表 ============ -->
+  <g transform="translate(195, 100)" filter="url(#shadow)">
+    <rect width="110" height="36" rx="6" fill="url(#joinGradient)"/>
+    <text x="55" y="23" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="white">posts_authors</text>
+  </g>
+
+  <!-- ============ posts_tags 关联表 ============ -->
+  <g transform="translate(495, 100)" filter="url(#shadow)">
+    <rect width="100" height="36" rx="6" fill="url(#joinGradient)"/>
+    <text x="50" y="23" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="white">posts_tags</text>
+  </g>
+
+  <!-- ============ posts_meta 扩展表 ============ -->
+  <g transform="translate(340, 220)" filter="url(#shadow)">
+    <rect width="120" height="36" rx="6" fill="url(#extendGradient)"/>
+    <text x="60" y="23" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="white">posts_meta</text>
+  </g>
+
+  <!-- ============ roles 表 ============ -->
+  <g transform="translate(50, 220)" filter="url(#shadow)">
+    <rect width="100" height="36" rx="6" fill="url(#entityGradient)"/>
+    <text x="50" y="23" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="white">roles</text>
+  </g>
+
+  <!-- ============ roles_users 关联表 ============ -->
+  <g transform="translate(55, 300)" filter="url(#shadow)">
+    <rect width="90" height="32" rx="5" fill="url(#joinGradient)"/>
+    <text x="45" y="21" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">roles_users</text>
+  </g>
+
+  <!-- ============ 连接线 ============ -->
+
+  <!-- users → posts_authors -->
+  <line x1="170" y1="145" x2="195" y2="125" stroke="#059669" stroke-width="2"/>
+  <text x="175" y="125" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#059669">1</text>
+  <text x="195" y="145" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#059669">N</text>
+
+  <!-- posts_authors → posts -->
+  <line x1="305" y1="125" x2="340" y2="145" stroke="#059669" stroke-width="2"/>
+  <text x="305" y="145" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#059669">N</text>
+  <text x="330" y="125" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#059669">1</text>
+
+  <!-- posts → posts_tags -->
+  <line x1="460" y1="145" x2="495" y2="125" stroke="#059669" stroke-width="2"/>
+  <text x="460" y="125" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#059669">1</text>
+  <text x="490" y="145" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#059669">N</text>
+
+  <!-- posts_tags → tags -->
+  <line x1="595" y1="125" x2="630" y2="145" stroke="#059669" stroke-width="2"/>
+  <text x="595" y="145" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#059669">N</text>
+  <text x="625" y="125" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#059669">1</text>
+
+  <!-- posts → posts_meta (1:1) -->
+  <line x1="400" y1="170" x2="400" y2="220" stroke="#D97706" stroke-width="2" stroke-dasharray="4,2"/>
+  <text x="408" y="190" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#D97706">1:1</text>
+
+  <!-- users → roles_users -->
+  <line x1="100" y1="170" x2="100" y2="220" stroke="#059669" stroke-width="2"/>
+  <text x="108" y="195" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#059669">1:N</text>
+
+  <!-- roles_users → roles -->
+  <line x1="100" y1="256" x2="100" y2="300" stroke="#059669" stroke-width="2"/>
+  <text x="108" y="280" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#059669">N:1</text>
+
+  <!-- tags 自引用 (parent_id) -->
+  <path d="M 750 140 Q 780 140 780 160 Q 780 180 750 180" fill="none" stroke="#D97706" stroke-width="2" stroke-dasharray="4,2"/>
+  <text x="760" y="165" font-family="Arial, sans-serif" font-size="9" fill="#D97706">parent_id</text>
+
+  <!-- ============ M:N 关系标注 ============ -->
+  <g transform="translate(180, 65)">
+    <rect width="140" height="24" rx="4" fill="#ECFDF5" stroke="#059669" stroke-width="1"/>
+    <text x="70" y="16" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#047857">User ←M:N→ Post</text>
+  </g>
+
+  <g transform="translate(480, 65)">
+    <rect width="140" height="24" rx="4" fill="#ECFDF5" stroke="#059669" stroke-width="1"/>
+    <text x="70" y="16" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#047857">Post ←M:N→ Tag</text>
+  </g>
+
+  <!-- ============ 图例 ============ -->
+  <g transform="translate(480, 280)">
+    <text x="0" y="0" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#1E293B">图例:</text>
+
+    <rect x="0" y="12" width="16" height="12" rx="2" fill="url(#entityGradient)"/>
+    <text x="22" y="22" font-family="Arial, sans-serif" font-size="10" fill="#64748B">核心实体</text>
+
+    <rect x="85" y="12" width="16" height="12" rx="2" fill="url(#joinGradient)"/>
+    <text x="107" y="22" font-family="Arial, sans-serif" font-size="10" fill="#64748B">关联表 (M:N)</text>
+
+    <rect x="190" y="12" width="16" height="12" rx="2" fill="url(#extendGradient)"/>
+    <text x="212" y="22" font-family="Arial, sans-serif" font-size="10" fill="#64748B">扩展表 (1:1)</text>
+
+    <line x1="0" y1="42" x2="30" y2="42" stroke="#059669" stroke-width="2"/>
+    <text x="36" y="46" font-family="Arial, sans-serif" font-size="10" fill="#64748B">外键关系</text>
+
+    <line x1="110" y1="42" x2="140" y2="42" stroke="#D97706" stroke-width="2" stroke-dasharray="4,2"/>
+    <text x="146" y="46" font-family="Arial, sans-serif" font-size="10" fill="#64748B">1:1 / 自引用</text>
+  </g>
+
+  <!-- ============ 关键说明 ============ -->
+  <g transform="translate(50, 355)">
+    <text x="0" y="0" font-family="Arial, sans-serif" font-size="11" fill="#64748B">
+      <tspan font-weight="bold" fill="#1E293B">sort_order</tspan>: posts_authors/posts_tags 通过排序字段区分主作者、主标签
+    </text>
+    <text x="0" y="18" font-family="Arial, sans-serif" font-size="11" fill="#64748B">
+      <tspan font-weight="bold" fill="#1E293B">visibility</tspan>: tags 支持 'public' | 'internal' (内部标签如 #hash-tags)
+    </text>
+  </g>
+</svg>

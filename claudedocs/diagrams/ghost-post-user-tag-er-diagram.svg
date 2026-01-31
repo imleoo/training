@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900">
+  <defs>
+    <!-- 渐变定义 -->
+    <linearGradient id="headerGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4F46E5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3730A3;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="joinTableGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#059669;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#047857;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="extendTableGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#D97706;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#B45309;stop-opacity:1" />
+    </linearGradient>
+    <!-- 阴影 -->
+    <filter id="dropShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+
+  <!-- 背景 -->
+  <rect width="1200" height="900" fill="#F8FAFC"/>
+
+  <!-- 标题 -->
+  <text x="600" y="45" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#1E293B">
+    Ghost 数据库架构 - Post、User、Tag 实体关系图
+  </text>
+  <text x="600" y="75" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#64748B">
+    Entity Relationship Diagram
+  </text>
+
+  <!-- ============ POSTS 表 (中心) ============ -->
+  <g transform="translate(460, 280)" filter="url(#dropShadow)">
+    <rect width="280" height="300" rx="8" fill="white" stroke="#E2E8F0" stroke-width="1"/>
+    <rect width="280" height="40" rx="8" fill="url(#headerGradient)"/>
+    <rect x="0" y="32" width="280" height="8" fill="url(#headerGradient)"/>
+    <text x="140" y="27" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white">posts</text>
+
+    <!-- 字段 -->
+    <text x="15" y="65" font-family="monospace" font-size="12" fill="#4F46E5" font-weight="bold">PK</text>
+    <text x="45" y="65" font-family="monospace" font-size="12" fill="#1E293B">id</text>
+    <text x="200" y="65" font-family="monospace" font-size="11" fill="#64748B">string(24)</text>
+
+    <text x="45" y="85" font-family="monospace" font-size="12" fill="#1E293B">uuid</text>
+    <text x="200" y="85" font-family="monospace" font-size="11" fill="#64748B">string(36)</text>
+
+    <text x="45" y="105" font-family="monospace" font-size="12" fill="#1E293B">title</text>
+    <text x="200" y="105" font-family="monospace" font-size="11" fill="#64748B">string(2000)</text>
+
+    <text x="45" y="125" font-family="monospace" font-size="12" fill="#1E293B">slug</text>
+    <text x="200" y="125" font-family="monospace" font-size="11" fill="#64748B">string(191)</text>
+
+    <text x="45" y="145" font-family="monospace" font-size="12" fill="#1E293B">lexical</text>
+    <text x="200" y="145" font-family="monospace" font-size="11" fill="#64748B">longtext</text>
+
+    <text x="45" y="165" font-family="monospace" font-size="12" fill="#1E293B">html</text>
+    <text x="200" y="165" font-family="monospace" font-size="11" fill="#64748B">longtext</text>
+
+    <text x="45" y="185" font-family="monospace" font-size="12" fill="#1E293B">type</text>
+    <text x="200" y="185" font-family="monospace" font-size="11" fill="#64748B">'post'|'page'</text>
+
+    <text x="45" y="205" font-family="monospace" font-size="12" fill="#1E293B">status</text>
+    <text x="200" y="205" font-family="monospace" font-size="11" fill="#64748B">string(50)</text>
+
+    <text x="45" y="225" font-family="monospace" font-size="12" fill="#1E293B">visibility</text>
+    <text x="200" y="225" font-family="monospace" font-size="11" fill="#64748B">string(50)</text>
+
+    <text x="15" y="245" font-family="monospace" font-size="12" fill="#059669" font-weight="bold">FK</text>
+    <text x="45" y="245" font-family="monospace" font-size="12" fill="#1E293B">newsletter_id</text>
+    <text x="200" y="245" font-family="monospace" font-size="11" fill="#64748B">string(24)</text>
+
+    <text x="45" y="265" font-family="monospace" font-size="12" fill="#1E293B">published_at</text>
+    <text x="200" y="265" font-family="monospace" font-size="11" fill="#64748B">dateTime</text>
+
+    <text x="45" y="285" font-family="monospace" font-size="12" fill="#1E293B">created_at</text>
+    <text x="200" y="285" font-family="monospace" font-size="11" fill="#64748B">dateTime</text>
+  </g>
+
+  <!-- ============ USERS 表 (左侧) ============ -->
+  <g transform="translate(50, 180)" filter="url(#dropShadow)">
+    <rect width="240" height="260" rx="8" fill="white" stroke="#E2E8F0" stroke-width="1"/>
+    <rect width="240" height="40" rx="8" fill="url(#headerGradient)"/>
+    <rect x="0" y="32" width="240" height="8" fill="url(#headerGradient)"/>
+    <text x="120" y="27" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white">users (staff)</text>
+
+    <text x="15" y="65" font-family="monospace" font-size="12" fill="#4F46E5" font-weight="bold">PK</text>
+    <text x="45" y="65" font-family="monospace" font-size="12" fill="#1E293B">id</text>
+    <text x="160" y="65" font-family="monospace" font-size="11" fill="#64748B">string(24)</text>
+
+    <text x="45" y="85" font-family="monospace" font-size="12" fill="#1E293B">name</text>
+    <text x="160" y="85" font-family="monospace" font-size="11" fill="#64748B">string(191)</text>
+
+    <text x="45" y="105" font-family="monospace" font-size="12" fill="#1E293B">slug</text>
+    <text x="160" y="105" font-family="monospace" font-size="11" fill="#64748B">string(191)</text>
+
+    <text x="45" y="125" font-family="monospace" font-size="12" fill="#1E293B">email</text>
+    <text x="160" y="125" font-family="monospace" font-size="11" fill="#64748B">string(191)</text>
+
+    <text x="45" y="145" font-family="monospace" font-size="12" fill="#1E293B">password</text>
+    <text x="160" y="145" font-family="monospace" font-size="11" fill="#64748B">string(60)</text>
+
+    <text x="45" y="165" font-family="monospace" font-size="12" fill="#1E293B">profile_image</text>
+    <text x="160" y="165" font-family="monospace" font-size="11" fill="#64748B">string(2000)</text>
+
+    <text x="45" y="185" font-family="monospace" font-size="12" fill="#1E293B">bio</text>
+    <text x="160" y="185" font-family="monospace" font-size="11" fill="#64748B">text(65535)</text>
+
+    <text x="45" y="205" font-family="monospace" font-size="12" fill="#1E293B">status</text>
+    <text x="160" y="205" font-family="monospace" font-size="11" fill="#64748B">string(50)</text>
+
+    <text x="45" y="225" font-family="monospace" font-size="12" fill="#1E293B">last_seen</text>
+    <text x="160" y="225" font-family="monospace" font-size="11" fill="#64748B">dateTime</text>
+
+    <text x="45" y="245" font-family="monospace" font-size="12" fill="#1E293B">created_at</text>
+    <text x="160" y="245" font-family="monospace" font-size="11" fill="#64748B">dateTime</text>
+  </g>
+
+  <!-- ============ TAGS 表 (右侧) ============ -->
+  <g transform="translate(910, 180)" filter="url(#dropShadow)">
+    <rect width="240" height="280" rx="8" fill="white" stroke="#E2E8F0" stroke-width="1"/>
+    <rect width="240" height="40" rx="8" fill="url(#headerGradient)"/>
+    <rect x="0" y="32" width="240" height="8" fill="url(#headerGradient)"/>
+    <text x="120" y="27" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white">tags</text>
+
+    <text x="15" y="65" font-family="monospace" font-size="12" fill="#4F46E5" font-weight="bold">PK</text>
+    <text x="45" y="65" font-family="monospace" font-size="12" fill="#1E293B">id</text>
+    <text x="160" y="65" font-family="monospace" font-size="11" fill="#64748B">string(24)</text>
+
+    <text x="45" y="85" font-family="monospace" font-size="12" fill="#1E293B">name</text>
+    <text x="160" y="85" font-family="monospace" font-size="11" fill="#64748B">string(191)</text>
+
+    <text x="45" y="105" font-family="monospace" font-size="12" fill="#1E293B">slug</text>
+    <text x="160" y="105" font-family="monospace" font-size="11" fill="#64748B">string(191)</text>
+
+    <text x="45" y="125" font-family="monospace" font-size="12" fill="#1E293B">description</text>
+    <text x="160" y="125" font-family="monospace" font-size="11" fill="#64748B">text(65535)</text>
+
+    <text x="45" y="145" font-family="monospace" font-size="12" fill="#1E293B">feature_image</text>
+    <text x="160" y="145" font-family="monospace" font-size="11" fill="#64748B">string(2000)</text>
+
+    <text x="15" y="165" font-family="monospace" font-size="12" fill="#D97706" font-weight="bold">FK</text>
+    <text x="45" y="165" font-family="monospace" font-size="12" fill="#1E293B">parent_id</text>
+    <text x="160" y="165" font-family="monospace" font-size="11" fill="#64748B">string(24)</text>
+
+    <text x="45" y="185" font-family="monospace" font-size="12" fill="#1E293B">visibility</text>
+    <text x="160" y="185" font-family="monospace" font-size="11" fill="#64748B">'public'|'internal'</text>
+
+    <text x="45" y="205" font-family="monospace" font-size="12" fill="#1E293B">meta_title</text>
+    <text x="160" y="205" font-family="monospace" font-size="11" fill="#64748B">string(2000)</text>
+
+    <text x="45" y="225" font-family="monospace" font-size="12" fill="#1E293B">accent_color</text>
+    <text x="160" y="225" font-family="monospace" font-size="11" fill="#64748B">string(50)</text>
+
+    <text x="45" y="245" font-family="monospace" font-size="12" fill="#1E293B">created_at</text>
+    <text x="160" y="245" font-family="monospace" font-size="11" fill="#64748B">dateTime</text>
+  </g>
+
+  <!-- ============ posts_authors 关联表 (左中) ============ -->
+  <g transform="translate(300, 340)" filter="url(#dropShadow)">
+    <rect width="150" height="120" rx="8" fill="white" stroke="#E2E8F0" stroke-width="1"/>
+    <rect width="150" height="35" rx="8" fill="url(#joinTableGradient)"/>
+    <rect x="0" y="27" width="150" height="8" fill="url(#joinTableGradient)"/>
+    <text x="75" y="24" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="white">posts_authors</text>
+
+    <text x="10" y="58" font-family="monospace" font-size="11" fill="#4F46E5" font-weight="bold">PK</text>
+    <text x="35" y="58" font-family="monospace" font-size="11" fill="#1E293B">id</text>
+
+    <text x="10" y="78" font-family="monospace" font-size="11" fill="#059669" font-weight="bold">FK</text>
+    <text x="35" y="78" font-family="monospace" font-size="11" fill="#1E293B">post_id</text>
+
+    <text x="10" y="98" font-family="monospace" font-size="11" fill="#059669" font-weight="bold">FK</text>
+    <text x="35" y="98" font-family="monospace" font-size="11" fill="#1E293B">author_id</text>
+
+    <text x="35" y="118" font-family="monospace" font-size="11" fill="#1E293B">sort_order</text>
+  </g>
+
+  <!-- ============ posts_tags 关联表 (右中) ============ -->
+  <g transform="translate(750, 340)" filter="url(#dropShadow)">
+    <rect width="150" height="120" rx="8" fill="white" stroke="#E2E8F0" stroke-width="1"/>
+    <rect width="150" height="35" rx="8" fill="url(#joinTableGradient)"/>
+    <rect x="0" y="27" width="150" height="8" fill="url(#joinTableGradient)"/>
+    <text x="75" y="24" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="white">posts_tags</text>
+
+    <text x="10" y="58" font-family="monospace" font-size="11" fill="#4F46E5" font-weight="bold">PK</text>
+    <text x="35" y="58" font-family="monospace" font-size="11" fill="#1E293B">id</text>
+
+    <text x="10" y="78" font-family="monospace" font-size="11" fill="#059669" font-weight="bold">FK</text>
+    <text x="35" y="78" font-family="monospace" font-size="11" fill="#1E293B">post_id</text>
+
+    <text x="10" y="98" font-family="monospace" font-size="11" fill="#059669" font-weight="bold">FK</text>
+    <text x="35" y="98" font-family="monospace" font-size="11" fill="#1E293B">tag_id</text>
+
+    <text x="35" y="118" font-family="monospace" font-size="11" fill="#1E293B">sort_order</text>
+  </g>
+
+  <!-- ============ posts_meta 扩展表 (下方) ============ -->
+  <g transform="translate(460, 620)" filter="url(#dropShadow)">
+    <rect width="280" height="160" rx="8" fill="white" stroke="#E2E8F0" stroke-width="1"/>
+    <rect width="280" height="35" rx="8" fill="url(#extendTableGradient)"/>
+    <rect x="0" y="27" width="280" height="8" fill="url(#extendTableGradient)"/>
+    <text x="140" y="24" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="white">posts_meta (1:1)</text>
+
+    <text x="15" y="58" font-family="monospace" font-size="11" fill="#4F46E5" font-weight="bold">PK</text>
+    <text x="45" y="58" font-family="monospace" font-size="11" fill="#1E293B">id</text>
+    <text x="200" y="58" font-family="monospace" font-size="10" fill="#64748B">string(24)</text>
+
+    <text x="15" y="78" font-family="monospace" font-size="11" fill="#D97706" font-weight="bold">FK</text>
+    <text x="45" y="78" font-family="monospace" font-size="11" fill="#1E293B">post_id (unique)</text>
+    <text x="200" y="78" font-family="monospace" font-size="10" fill="#64748B">string(24)</text>
+
+    <text x="45" y="98" font-family="monospace" font-size="11" fill="#1E293B">og_image / og_title</text>
+    <text x="200" y="98" font-family="monospace" font-size="10" fill="#64748B">SEO</text>
+
+    <text x="45" y="118" font-family="monospace" font-size="11" fill="#1E293B">twitter_image / twitter_title</text>
+    <text x="200" y="118" font-family="monospace" font-size="10" fill="#64748B">Social</text>
+
+    <text x="45" y="138" font-family="monospace" font-size="11" fill="#1E293B">meta_title / meta_description</text>
+    <text x="200" y="138" font-family="monospace" font-size="10" fill="#64748B">Meta</text>
+
+    <text x="45" y="158" font-family="monospace" font-size="11" fill="#1E293B">email_subject / email_only</text>
+    <text x="200" y="158" font-family="monospace" font-size="10" fill="#64748B">Email</text>
+  </g>
+
+  <!-- ============ post_revisions 扩展表 (下右) ============ -->
+  <g transform="translate(780, 620)" filter="url(#dropShadow)">
+    <rect width="200" height="140" rx="8" fill="white" stroke="#E2E8F0" stroke-width="1"/>
+    <rect width="200" height="35" rx="8" fill="url(#extendTableGradient)"/>
+    <rect x="0" y="27" width="200" height="8" fill="url(#extendTableGradient)"/>
+    <text x="100" y="24" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="white">post_revisions</text>
+
+    <text x="15" y="58" font-family="monospace" font-size="11" fill="#4F46E5" font-weight="bold">PK</text>
+    <text x="45" y="58" font-family="monospace" font-size="11" fill="#1E293B">id</text>
+
+    <text x="15" y="78" font-family="monospace" font-size="11" fill="#D97706" font-weight="bold">FK</text>
+    <text x="45" y="78" font-family="monospace" font-size="11" fill="#1E293B">post_id</text>
+
+    <text x="15" y="98" font-family="monospace" font-size="11" fill="#D97706" font-weight="bold">FK</text>
+    <text x="45" y="98" font-family="monospace" font-size="11" fill="#1E293B">author_id</text>
+
+    <text x="45" y="118" font-family="monospace" font-size="11" fill="#1E293B">lexical / title</text>
+
+    <text x="45" y="138" font-family="monospace" font-size="11" fill="#1E293B">created_at_ts</text>
+  </g>
+
+  <!-- ============ roles 表 (左上) ============ -->
+  <g transform="translate(50, 620)" filter="url(#dropShadow)">
+    <rect width="180" height="120" rx="8" fill="white" stroke="#E2E8F0" stroke-width="1"/>
+    <rect width="180" height="35" rx="8" fill="url(#headerGradient)"/>
+    <rect x="0" y="27" width="180" height="8" fill="url(#headerGradient)"/>
+    <text x="90" y="24" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="white">roles</text>
+
+    <text x="15" y="58" font-family="monospace" font-size="11" fill="#4F46E5" font-weight="bold">PK</text>
+    <text x="45" y="58" font-family="monospace" font-size="11" fill="#1E293B">id</text>
+
+    <text x="45" y="78" font-family="monospace" font-size="11" fill="#1E293B">name</text>
+
+    <text x="45" y="98" font-family="monospace" font-size="11" fill="#1E293B">description</text>
+
+    <text x="45" y="118" font-family="monospace" font-size="11" fill="#1E293B">created_at</text>
+  </g>
+
+  <!-- ============ roles_users 关联表 (左中下) ============ -->
+  <g transform="translate(85, 480)" filter="url(#dropShadow)">
+    <rect width="130" height="100" rx="8" fill="white" stroke="#E2E8F0" stroke-width="1"/>
+    <rect width="130" height="30" rx="8" fill="url(#joinTableGradient)"/>
+    <rect x="0" y="22" width="130" height="8" fill="url(#joinTableGradient)"/>
+    <text x="65" y="20" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="white">roles_users</text>
+
+    <text x="10" y="50" font-family="monospace" font-size="10" fill="#4F46E5" font-weight="bold">PK</text>
+    <text x="32" y="50" font-family="monospace" font-size="10" fill="#1E293B">id</text>
+
+    <text x="10" y="68" font-family="monospace" font-size="10" fill="#059669" font-weight="bold">FK</text>
+    <text x="32" y="68" font-family="monospace" font-size="10" fill="#1E293B">role_id</text>
+
+    <text x="10" y="86" font-family="monospace" font-size="10" fill="#059669" font-weight="bold">FK</text>
+    <text x="32" y="86" font-family="monospace" font-size="10" fill="#1E293B">user_id</text>
+  </g>
+
+  <!-- ============ 关系连线 ============ -->
+  <!-- users → posts_authors -->
+  <line x1="290" y1="340" x2="300" y2="380" stroke="#059669" stroke-width="2" marker-end="url(#arrowGreen)"/>
+
+  <!-- posts_authors → posts -->
+  <line x1="450" y1="400" x2="460" y2="400" stroke="#059669" stroke-width="2"/>
+
+  <!-- posts → posts_tags -->
+  <line x1="740" y1="400" x2="750" y2="400" stroke="#059669" stroke-width="2"/>
+
+  <!-- posts_tags → tags -->
+  <line x1="900" y1="380" x2="910" y2="340" stroke="#059669" stroke-width="2"/>
+
+  <!-- posts → posts_meta -->
+  <line x1="600" y1="580" x2="600" y2="620" stroke="#D97706" stroke-width="2" stroke-dasharray="5,3"/>
+
+  <!-- posts → post_revisions -->
+  <line x1="680" y1="580" x2="820" y2="620" stroke="#D97706" stroke-width="2" stroke-dasharray="5,3"/>
+
+  <!-- users → roles_users -->
+  <line x1="150" y1="440" x2="150" y2="480" stroke="#059669" stroke-width="2"/>
+
+  <!-- roles_users → roles -->
+  <line x1="140" y1="580" x2="140" y2="620" stroke="#059669" stroke-width="2"/>
+
+  <!-- tags self-reference (parent_id) -->
+  <path d="M 1150 280 Q 1180 280 1180 320 Q 1180 360 1150 360" fill="none" stroke="#D97706" stroke-width="2" stroke-dasharray="4,2"/>
+  <text x="1175" y="325" font-family="Arial, sans-serif" font-size="10" fill="#D97706">parent_id</text>
+
+  <!-- ============ 图例 ============ -->
+  <g transform="translate(50, 800)">
+    <text x="0" y="0" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#1E293B">图例 Legend:</text>
+
+    <rect x="0" y="15" width="20" height="14" rx="2" fill="url(#headerGradient)"/>
+    <text x="30" y="26" font-family="Arial, sans-serif" font-size="12" fill="#1E293B">核心实体表</text>
+
+    <rect x="150" y="15" width="20" height="14" rx="2" fill="url(#joinTableGradient)"/>
+    <text x="180" y="26" font-family="Arial, sans-serif" font-size="12" fill="#1E293B">多对多关联表</text>
+
+    <rect x="320" y="15" width="20" height="14" rx="2" fill="url(#extendTableGradient)"/>
+    <text x="350" y="26" font-family="Arial, sans-serif" font-size="12" fill="#1E293B">扩展/历史表</text>
+
+    <line x1="500" y1="22" x2="540" y2="22" stroke="#059669" stroke-width="2"/>
+    <text x="550" y="26" font-family="Arial, sans-serif" font-size="12" fill="#1E293B">外键关系</text>
+
+    <line x1="680" y1="22" x2="720" y2="22" stroke="#D97706" stroke-width="2" stroke-dasharray="5,3"/>
+    <text x="730" y="26" font-family="Arial, sans-serif" font-size="12" fill="#1E293B">1:1 / 自引用</text>
+
+    <text x="880" y="26" font-family="monospace" font-size="12" fill="#4F46E5" font-weight="bold">PK</text>
+    <text x="910" y="26" font-family="Arial, sans-serif" font-size="12" fill="#1E293B">主键</text>
+
+    <text x="970" y="26" font-family="monospace" font-size="12" fill="#059669" font-weight="bold">FK</text>
+    <text x="1000" y="26" font-family="Arial, sans-serif" font-size="12" fill="#1E293B">外键</text>
+  </g>
+
+  <!-- ============ 关系标注 ============ -->
+  <!-- users - posts_authors - posts 关系 -->
+  <text x="240" y="360" font-family="Arial, sans-serif" font-size="11" fill="#059669" font-weight="bold">1</text>
+  <text x="310" y="360" font-family="Arial, sans-serif" font-size="11" fill="#059669" font-weight="bold">N</text>
+  <text x="445" y="390" font-family="Arial, sans-serif" font-size="11" fill="#059669" font-weight="bold">N</text>
+  <text x="470" y="390" font-family="Arial, sans-serif" font-size="11" fill="#059669" font-weight="bold">1</text>
+
+  <!-- posts - posts_tags - tags 关系 -->
+  <text x="732" y="390" font-family="Arial, sans-serif" font-size="11" fill="#059669" font-weight="bold">1</text>
+  <text x="755" y="390" font-family="Arial, sans-serif" font-size="11" fill="#059669" font-weight="bold">N</text>
+  <text x="895" y="360" font-family="Arial, sans-serif" font-size="11" fill="#059669" font-weight="bold">N</text>
+  <text x="920" y="360" font-family="Arial, sans-serif" font-size="11" fill="#059669" font-weight="bold">1</text>
+
+  <!-- posts - posts_meta 关系 -->
+  <text x="585" y="600" font-family="Arial, sans-serif" font-size="11" fill="#D97706" font-weight="bold">1</text>
+  <text x="608" y="618" font-family="Arial, sans-serif" font-size="11" fill="#D97706" font-weight="bold">1</text>
+
+  <!-- users - roles 关系 -->
+  <text x="135" y="470" font-family="Arial, sans-serif" font-size="11" fill="#059669" font-weight="bold">1</text>
+  <text x="155" y="485" font-family="Arial, sans-serif" font-size="11" fill="#059669" font-weight="bold">N</text>
+
+  <!-- 关系说明文字 -->
+  <g transform="translate(50, 105)">
+    <text x="0" y="0" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#1E293B">核心关系说明:</text>
+    <text x="0" y="20" font-family="Arial, sans-serif" font-size="11" fill="#64748B">1. User ←(M:N)→ Post: 一篇文章可有多个作者，一个作者可写多篇文章</text>
+    <text x="0" y="38" font-family="Arial, sans-serif" font-size="11" fill="#64748B">2. Post ←(M:N)→ Tag: 一篇文章可有多个标签，一个标签可关联多篇文章</text>
+    <text x="0" y="56" font-family="Arial, sans-serif" font-size="11" fill="#64748B">3. User ←(M:N)→ Role: 用户角色权限管理 (Owner, Admin, Editor, Author, Contributor)</text>
+  </g>
+</svg>
