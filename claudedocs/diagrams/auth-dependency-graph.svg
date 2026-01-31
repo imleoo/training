@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1200" width="1400" height="1200">
+  <defs>
+    <style>
+      .core-module { fill: #4A90E2; stroke: #2E5C8A; stroke-width: 2; }
+      .service-module { fill: #7ED321; stroke: #5A9B18; stroke-width: 2; }
+      .external-module { fill: #F5A623; stroke: #C17D11; stroke-width: 2; }
+      .model-module { fill: #BD10E0; stroke: #8B0AA8; stroke-width: 2; }
+      .util-module { fill: #50E3C2; stroke: #3AAA94; stroke-width: 2; }
+      .direct-dep { stroke: #333; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .indirect-dep { stroke: #999; stroke-width: 1.5; stroke-dasharray: 5,5; fill: none; marker-end: url(#arrowhead-light); }
+      .circular-dep { stroke: #E74C3C; stroke-width: 2.5; fill: none; marker-end: url(#arrowhead-red); }
+      .module-text { font-family: Arial, sans-serif; font-size: 12px; fill: white; text-anchor: middle; }
+      .module-label { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: white; text-anchor: middle; }
+      .dep-count { font-family: Arial, sans-serif; font-size: 10px; fill: white; text-anchor: middle; }
+      .legend-text { font-family: Arial, sans-serif; font-size: 12px; fill: #333; }
+      .title-text { font-family: Arial, sans-serif; font-size: 20px; font-weight: bold; fill: #333; text-anchor: middle; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#333" />
+    </marker>
+    <marker id="arrowhead-light" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#999" />
+    </marker>
+    <marker id="arrowhead-red" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#E74C3C" />
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="700" y="30" class="title-text">Ghost Authentication Module - 依赖关系图</text>
+
+  <!-- Main Authentication Module (Center) -->
+  <rect x="600" y="80" width="200" height="80" class="core-module" rx="5"/>
+  <text x="700" y="110" class="module-label">authentication.js</text>
+  <text x="700" y="130" class="module-text">API Endpoint</text>
+  <text x="700" y="145" class="dep-count">直接依赖: 13</text>
+
+  <!-- External Modules (Top Row) -->
+  <rect x="50" y="220" width="140" height="60" class="external-module" rx="5"/>
+  <text x="120" y="245" class="module-label">@tryghost/tpl</text>
+  <text x="120" y="265" class="dep-count">模板引擎</text>
+
+  <rect x="220" y="220" width="140" height="60" class="external-module" rx="5"/>
+  <text x="290" y="245" class="module-label">@tryghost/errors</text>
+  <text x="290" y="265" class="dep-count">错误处理</text>
+
+  <rect x="390" y="220" width="140" height="60" class="external-module" rx="5"/>
+  <text x="460" y="245" class="module-label">@tryghost/logging</text>
+  <text x="460" y="265" class="dep-count">日志服务</text>
+
+  <!-- API Index Module -->
+  <rect x="600" y="220" width="200" height="60" class="core-module" rx="5"/>
+  <text x="700" y="245" class="module-label">api/endpoints/index</text>
+  <text x="700" y="265" class="dep-count">API 聚合器</text>
+
+  <!-- Config Module -->
+  <rect x="850" y="220" width="140" height="60" class="util-module" rx="5"/>
+  <text x="920" y="245" class="module-label">shared/config</text>
+  <text x="920" y="265" class="dep-count">配置管理</text>
+
+  <!-- Service Modules (Middle Row) -->
+  <rect x="50" y="360" width="160" height="70" class="service-module" rx="5"/>
+  <text x="130" y="385" class="module-label">auth/setup</text>
+  <text x="130" y="405" class="module-text">初始化设置</text>
+  <text x="130" y="420" class="dep-count">依赖: 7</text>
+
+  <rect x="240" y="360" width="180" height="70" class="service-module" rx="5"/>
+  <text x="330" y="385" class="module-label">auth/passwordreset</text>
+  <text x="330" y="405" class="module-text">密码重置</text>
+  <text x="330" y="420" class="dep-count">依赖: 8</text>
+
+  <rect x="450" y="360" width="160" height="70" class="service-module" rx="5"/>
+  <text x="530" y="385" class="module-label">auth/session</text>
+  <text x="530" y="405" class="module-text">会话管理</text>
+  <text x="530" y="420" class="dep-count">依赖: 10</text>
+
+  <rect x="640" y="360" width="140" height="70" class="service-module" rx="5"/>
+  <text x="710" y="385" class="module-label">invitations</text>
+  <text x="710" y="405" class="module-text">邀请服务</text>
+  <text x="710" y="420" class="dep-count">依赖: 3</text>
+
+  <rect x="810" y="360" width="140" height="70" class="service-module" rx="5"/>
+  <text x="880" y="385" class="module-label">UsersService</text>
+  <text x="880" y="405" class="module-text">用户服务</text>
+  <text x="880" y="420" class="dep-count">依赖: 5</text>
+
+  <rect x="980" y="360" width="140" height="70" class="service-module" rx="5"/>
+  <text x="1050" y="385" class="module-label">web/middleware</text>
+  <text x="1050" y="405" class="module-text">Web中间件</text>
+  <text x="1050" y="420" class="dep-count">依赖: 4</text>
+
+  <!-- Model Layer (Bottom Row) -->
+  <rect x="200" y="520" width="140" height="60" class="model-module" rx="5"/>
+  <text x="270" y="545" class="module-label">models/User</text>
+  <text x="270" y="565" class="dep-count">用户模型</text>
+
+  <rect x="370" y="520" width="140" height="60" class="model-module" rx="5"/>
+  <text x="440" y="545" class="module-label">models/Post</text>
+  <text x="440" y="565" class="dep-count">文章模型</text>
+
+  <rect x="540" y="520" width="140" height="60" class="model-module" rx="5"/>
+  <text x="610" y="545" class="module-label">models/Invite</text>
+  <text x="610" y="565" class="dep-count">邀请模型</text>
+
+  <rect x="710" y="520" width="140" height="60" class="model-module" rx="5"/>
+  <text x="780" y="545" class="module-label">models/ApiKey</text>
+  <text x="780" y="565" class="dep-count">API密钥</text>
+
+  <!-- Utility Modules (Right Side) -->
+  <rect x="1050" y="220" width="140" height="60" class="util-module" rx="5"/>
+  <text x="1120" y="245" class="module-label">data/db/backup</text>
+  <text x="1120" y="265" class="dep-count">数据库备份</text>
+
+  <rect x="1220" y="220" width="140" height="60" class="util-module" rx="5"/>
+  <text x="1290" y="245" class="module-label">mail/utils</text>
+  <text x="1290" y="265" class="dep-count">邮件工具</text>
+
+  <!-- Dependencies - Direct (Solid Lines) -->
+  <!-- authentication.js to external modules -->
+  <path d="M 650 160 L 120 220" class="direct-dep"/>
+  <path d="M 670 160 L 290 220" class="direct-dep"/>
+  <path d="M 690 160 L 460 220" class="direct-dep"/>
+  <path d="M 700 160 L 700 220" class="direct-dep"/>
+  <path d="M 750 160 L 920 220" class="direct-dep"/>
+
+  <!-- authentication.js to services -->
+  <path d="M 620 160 L 130 360" class="direct-dep"/>
+  <path d="M 640 160 L 330 360" class="direct-dep"/>
+  <path d="M 660 160 L 530 360" class="direct-dep"/>
+  <path d="M 720 160 L 710 360" class="direct-dep"/>
+  <path d="M 740 160 L 880 360" class="direct-dep"/>
+  <path d="M 760 160 L 1050 360" class="direct-dep"/>
+
+  <!-- authentication.js to utilities -->
+  <path d="M 780 120 L 1120 220" class="direct-dep"/>
+
+  <!-- Services to Models (Indirect) -->
+  <path d="M 130 430 L 270 520" class="indirect-dep"/>
+  <path d="M 330 430 L 270 520" class="indirect-dep"/>
+  <path d="M 330 430 L 440 520" class="indirect-dep"/>
+  <path d="M 530 430 L 270 520" class="indirect-dep"/>
+  <path d="M 710 430 L 610 520" class="indirect-dep"/>
+  <path d="M 880 430 L 270 520" class="indirect-dep"/>
+  <path d="M 880 430 L 440 520" class="indirect-dep"/>
+  <path d="M 880 430 L 780 520" class="indirect-dep"/>
+
+  <!-- Circular Dependencies (Red Dashed) -->
+  <path d="M 700 280 Q 850 320 700 360" class="circular-dep" stroke-dasharray="8,4"/>
+  <text x="800" y="320" style="font-size: 11px; fill: #E74C3C; font-weight: bold;">⚠️ 循环依赖</text>
+
+  <!-- Services to Mail -->
+  <path d="M 130 390 Q 680 300 1290 240" class="indirect-dep"/>
+  <path d="M 330 390 Q 810 300 1290 250" class="indirect-dep"/>
+
+  <!-- Legend -->
+  <g transform="translate(50, 650)">
+    <text x="0" y="0" class="legend-text" font-weight="bold" font-size="16">图例说明：</text>
+
+    <rect x="0" y="20" width="30" height="20" class="core-module"/>
+    <text x="40" y="35" class="legend-text">核心模块 (API Endpoints)</text>
+
+    <rect x="0" y="50" width="30" height="20" class="service-module"/>
+    <text x="40" y="65" class="legend-text">服务模块 (Services)</text>
+
+    <rect x="0" y="80" width="30" height="20" class="external-module"/>
+    <text x="40" y="95" class="legend-text">外部模块 (@tryghost/*)</text>
+
+    <rect x="0" y="110" width="30" height="20" class="model-module"/>
+    <text x="40" y="125" class="legend-text">数据模型 (Models)</text>
+
+    <rect x="0" y="140" width="30" height="20" class="util-module"/>
+    <text x="40" y="155" class="legend-text">工具模块 (Utils/Config)</text>
+
+    <line x1="0" y1="180" x2="30" y2="180" class="direct-dep"/>
+    <text x="40" y="185" class="legend-text">直接依赖</text>
+
+    <line x1="0" y1="210" x2="30" y2="210" class="indirect-dep"/>
+    <text x="40" y="215" class="legend-text">间接依赖</text>
+
+    <line x1="0" y1="240" x2="30" y2="240" class="circular-dep"/>
+    <text x="40" y="245" class="legend-text">循环依赖 (风险)</text>
+  </g>
+
+  <!-- Risk Analysis Box -->
+  <g transform="translate(400, 650)">
+    <rect x="0" y="0" width="550" height="280" fill="#FFF3CD" stroke="#FFC107" stroke-width="2" rx="5"/>
+    <text x="10" y="25" style="font-size: 16px; font-weight: bold; fill: #856404;">⚠️ 依赖风险分析</text>
+
+    <text x="20" y="55" style="font-size: 13px; fill: #333; font-weight: bold;">1. 循环依赖风险：</text>
+    <text x="30" y="75" style="font-size: 12px; fill: #555;">• authentication.js → api/index → authentication.js</text>
+    <text x="30" y="92" style="font-size: 12px; fill: #555;">• 通过 apiMail 和 apiSettings 形成循环引用</text>
+
+    <text x="20" y="120" style="font-size: 13px; fill: #333; font-weight: bold;">2. 高耦合模块：</text>
+    <text x="30" y="140" style="font-size: 12px; fill: #555;">• auth/setup (7个依赖) - 初始化流程复杂</text>
+    <text x="30" y="157" style="font-size: 12px; fill: #555;">• auth/passwordreset (8个依赖) - 密码重置逻辑耦合</text>
+    <text x="30" y="174" style="font-size: 12px; fill: #555;">• auth/session (10个依赖) - 会话管理依赖过多</text>
+
+    <text x="20" y="202" style="font-size: 13px; fill: #333; font-weight: bold;">3. 双向依赖：</text>
+    <text x="30" y="222" style="font-size: 12px; fill: #555;">• UsersService ⇄ auth (通过 passwordreset)</text>
+    <text x="30" y="239" style="font-size: 12px; fill: #555;">• authentication ⇄ api/index (通过 mail/settings)</text>
+
+    <text x="20" y="267" style="font-size: 13px; fill: #333; font-weight: bold;">建议：考虑引入依赖注入容器解耦循环依赖</text>
+  </g>
+
+  <!-- Statistics Box -->
+  <g transform="translate(1000, 650)">
+    <rect x="0" y="0" width="350" height="200" fill="#E8F5E9" stroke="#4CAF50" stroke-width="2" rx="5"/>
+    <text x="10" y="25" style="font-size: 16px; font-weight: bold; fill: #2E7D32;">📊 依赖统计</text>
+
+    <text x="20" y="55" style="font-size: 12px; fill: #333;">总模块数: 20</text>
+    <text x="20" y="75" style="font-size: 12px; fill: #333;">核心模块: 2</text>
+    <text x="20" y="95" style="font-size: 12px; fill: #333;">服务模块: 6</text>
+    <text x="20" y="115" style="font-size: 12px; fill: #333;">外部模块: 3</text>
+    <text x="20" y="135" style="font-size: 12px; fill: #333;">数据模型: 4</text>
+    <text x="20" y="155" style="font-size: 12px; fill: #333;">工具模块: 5</text>
+    <text x="20" y="180" style="font-size: 12px; fill: #333; font-weight: bold;">平均依赖深度: 2-3 层</text>
+  </g>
+</svg>
