@@ -1,6 +1,6 @@
-# AGENTS.md
+# CLAUDE.md
 
-This file provides guidance to AI Agents when working with code in this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Package Manager
 
@@ -234,3 +234,6 @@ yarn nx reset                  # Reset Nx cache
 ### Test Issues
 - **E2E failures:** Check `e2e/CLAUDE.md` for debugging tips
 - **Docker issues:** `yarn docker:clean && yarn docker:build`
+
+# currentDate
+Today's date is 2026-03-18.
