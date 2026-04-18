@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <style>
+      .title { font: bold 20px sans-serif; fill: #1a1a1a; }
+      .box { fill: #dbeafe; stroke: #2563eb; stroke-width: 2; }
+      .cache { fill: #fef3c7; stroke: #d97706; stroke-width: 2; }
+      .db { fill: #d1fae5; stroke: #059669; stroke-width: 2; }
+      .item { font: 13px sans-serif; fill: #1a1a1a; }
+      .desc { font: 11px sans-serif; fill: #666; }
+      .line { stroke: #2563eb; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+      .line-cache { stroke: #d97706; stroke-width: 2; fill: none; stroke-dasharray: 5,5; }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#2563eb"/>
+    </marker>
+  </defs>
+
+  <text x="400" y="30" class="title" text-anchor="middle">Ghost 数据流</text>
+
+  <!-- Browser -->
+  <rect x="300" y="60" width="200" height="60" class="box" rx="5"/>
+  <text x="400" y="85" class="item" text-anchor="middle" font-weight="bold">浏览器</text>
+  <text x="400" y="105" class="desc" text-anchor="middle">用户请求</text>
+
+  <!-- CDN/Ghost -->
+  <rect x="300" y="160" width="200" height="60" class="box" rx="5"/>
+  <text x="400" y="185" class="item" text-anchor="middle" font-weight="bold">CDN / Ghost Server</text>
+  <text x="400" y="205" class="desc" text-anchor="middle">静态资源 + 动态内容</text>
+
+  <!-- API Layer -->
+  <rect x="300" y="260" width="200" height="60" class="box" rx="5"/>
+  <text x="400" y="285" class="item" text-anchor="middle" font-weight="bold">API 端点</text>
+  <text x="400" y="305" class="desc" text-anchor="middle">REST API (69 endpoints)</text>
+
+  <!-- Services -->
+  <rect x="300" y="360" width="200" height="60" class="box" rx="5"/>
+  <text x="400" y="385" class="item" text-anchor="middle" font-weight="bold">服务层</text>
+  <text x="400" y="405" class="desc" text-anchor="middle">业务逻辑 (68 services)</text>
+
+  <!-- Models -->
+  <rect x="300" y="460" width="200" height="60" class="box" rx="5"/>
+  <text x="400" y="485" class="item" text-anchor="middle" font-weight="bold">模型层</text>
+  <text x="400" y="505" class="desc" text-anchor="middle">Bookshelf ORM (72 models)</text>
+
+  <!-- Database -->
+  <rect x="300" y="560" width="200" height="40" class="db" rx="5"/>
+  <text x="400" y="585" class="item" text-anchor="middle" font-weight="bold">MySQL 8.4.5</text>
+
+  <!-- Redis Cache -->
+  <rect x="550" y="360" width="180" height="80" class="cache" rx="5"/>
+  <text x="640" y="390" class="item" text-anchor="middle" font-weight="bold">Redis 7.0</text>
+  <text x="640" y="410" class="desc" text-anchor="middle">缓存层</text>
+  <text x="640" y="425" class="desc" text-anchor="middle">• 会话</text>
+  <text x="640" y="440" class="desc" text-anchor="middle">• 临时数据</text>
+
+  <!-- Arrows -->
+  <path d="M 400 120 L 400 160" class="line"/>
+  <path d="M 400 220 L 400 260" class="line"/>
+  <path d="M 400 320 L 400 360" class="line"/>
+  <path d="M 400 420 L 400 460" class="line"/>
+  <path d="M 400 520 L 400 560" class="line"/>
+
+  <!-- Cache connections -->
+  <path d="M 500 390 L 550 390" class="line-cache"/>
+  <path d="M 550 410 L 500 410" class="line-cache"/>
+
+  <!-- Labels -->
+  <text x="420" y="145" class="desc">HTTP Request</text>
+  <text x="420" y="245" class="desc">路由</text>
+  <text x="420" y="345" class="desc">验证 + 处理</text>
+  <text x="420" y="445" class="desc">查询构建</text>
+  <text x="420" y="545" class="desc">SQL 查询</text>
+</svg>

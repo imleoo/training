@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 650">
+  <defs>
+    <style>
+      .title { font: bold 20px sans-serif; fill: #1a1a1a; }
+      .layer-title { font: bold 15px sans-serif; fill: #1a1a1a; }
+      .box { fill: #f8f9fa; stroke: #2563eb; stroke-width: 2; }
+      .layer { fill: #fef3c7; stroke: #d97706; stroke-width: 2; }
+      .item { font: 11px sans-serif; fill: #4b5563; }
+      .line { stroke: #9ca3af; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <text x="450" y="30" class="title" text-anchor="middle">Ghost 前端架构</text>
+
+  <!-- Design System Layer -->
+  <rect x="50" y="60" width="800" height="90" class="layer" rx="5"/>
+  <text x="450" y="85" class="layer-title" text-anchor="middle">设计系统层</text>
+  <rect x="100" y="95" width="300" height="45" class="box" rx="3"/>
+  <text x="250" y="115" class="item" text-anchor="middle" font-weight="bold">shade (新)</text>
+  <text x="110" y="132" class="item">shadcn/ui + Radix + react-hook-form + zod</text>
+
+  <rect x="500" y="95" width="300" height="45" class="box" rx="3"/>
+  <text x="650" y="115" class="item" text-anchor="middle" font-weight="bold">admin-x-design-system (旧)</text>
+  <text x="510" y="132" class="item">逐步淘汰中</text>
+
+  <!-- Framework Layer -->
+  <rect x="50" y="180" width="800" height="80" class="layer" rx="5"/>
+  <text x="450" y="205" class="layer-title" text-anchor="middle">框架层</text>
+  <rect x="200" y="215" width="500" height="35" class="box" rx="3"/>
+  <text x="450" y="235" class="item" text-anchor="middle" font-weight="bold">admin-x-framework</text>
+  <text x="210" y="245" class="item">API hooks (useBrowse, useEdit) + 路由 + 工具</text>
+
+  <!-- Application Layer -->
+  <rect x="50" y="290" width="800" height="180" class="layer" rx="5"/>
+  <text x="450" y="315" class="layer-title" text-anchor="middle">应用层</text>
+
+  <rect x="80" y="330" width="360" height="120" class="box" rx="3"/>
+  <text x="260" y="350" class="item" text-anchor="middle" font-weight="bold">Admin Apps (嵌入式)</text>
+  <text x="100" y="370" class="item">• admin-x-settings - 设置管理</text>
+  <text x="100" y="390" class="item">• admin-x-activitypub - ActivityPub 集成</text>
+  <text x="100" y="410" class="item">• posts - 文章分析</text>
+  <text x="100" y="430" class="item">• stats - 站点统计</text>
+
+  <rect x="460" y="330" width="360" height="120" class="box" rx="3"/>
+  <text x="640" y="350" class="item" text-anchor="middle" font-weight="bold">Public Apps (UMD)</text>
+  <text x="480" y="370" class="item">• portal - 会员门户</text>
+  <text x="480" y="390" class="item">• comments-ui - 评论系统</text>
+  <text x="480" y="410" class="item">• signup-form - 注册表单</text>
+  <text x="480" y="430" class="item">• sodo-search - 搜索功能</text>
+
+  <!-- Integration Layer -->
+  <rect x="50" y="500" width="800" height="120" class="layer" rx="5"/>
+  <text x="450" y="525" class="layer-title" text-anchor="middle">集成层</text>
+
+  <rect x="100" y="540" width="300" height="65" class="box" rx="3"/>
+  <text x="250" y="560" class="item" text-anchor="middle" font-weight="bold">Ember Bridge</text>
+  <text x="110" y="580" class="item">AdminXComponent 动态加载 React 应用</text>
+  <text x="110" y="595" class="item">路径: /ghost/assets/{app-name}/</text>
+
+  <rect x="500" y="540" width="300" height="65" class="box" rx="3"/>
+  <text x="650" y="560" class="item" text-anchor="middle" font-weight="bold">UMD Bundles</text>
+  <text x="510" y="580" class="item">CDN 分发，主题 &lt;script&gt; 标签加载</text>
+  <text x="510" y="595" class="item">配置通过 data 属性传递</text>
+
+  <!-- Arrows -->
+  <path d="M 450 150 L 450 180" class="line"/>
+  <path d="M 450 260 L 450 290" class="line"/>
+  <path d="M 260 470 L 250 500" class="line"/>
+  <path d="M 640 470 L 650 500" class="line"/>
+</svg>

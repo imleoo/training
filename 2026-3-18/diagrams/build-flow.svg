@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400">
+  <defs>
+    <style>
+      .title { font: bold 20px sans-serif; fill: #1a1a1a; }
+      .box { fill: #dbeafe; stroke: #2563eb; stroke-width: 2; }
+      .item { font: 13px sans-serif; fill: #1a1a1a; }
+      .desc { font: 11px sans-serif; fill: #666; }
+      .line { stroke: #2563eb; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+    </style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="3" orient="auto">
+      <polygon points="0 0, 12 3, 0 6" fill="#2563eb"/>
+    </marker>
+  </defs>
+
+  <text x="450" y="30" class="title" text-anchor="middle">Ghost 构建流程 (Nx 依赖管理)</text>
+
+  <!-- Step 1 -->
+  <rect x="50" y="80" width="150" height="80" class="box" rx="5"/>
+  <text x="125" y="110" class="item" text-anchor="middle" font-weight="bold">1. 设计系统</text>
+  <text x="125" y="130" class="desc" text-anchor="middle">shade</text>
+  <text x="125" y="145" class="desc" text-anchor="middle">admin-x-design-system</text>
+
+  <!-- Step 2 -->
+  <rect x="250" y="80" width="150" height="80" class="box" rx="5"/>
+  <text x="325" y="110" class="item" text-anchor="middle" font-weight="bold">2. 框架层</text>
+  <text x="325" y="130" class="desc" text-anchor="middle">admin-x-framework</text>
+  <text x="325" y="145" class="desc" text-anchor="middle">依赖设计系统</text>
+
+  <!-- Step 3 -->
+  <rect x="450" y="80" width="150" height="80" class="box" rx="5"/>
+  <text x="525" y="110" class="item" text-anchor="middle" font-weight="bold">3. Admin Apps</text>
+  <text x="525" y="130" class="desc" text-anchor="middle">settings, posts, stats</text>
+  <text x="525" y="145" class="desc" text-anchor="middle">依赖框架层</text>
+
+  <!-- Step 4 -->
+  <rect x="650" y="80" width="150" height="80" class="box" rx="5"/>
+  <text x="725" y="110" class="item" text-anchor="middle" font-weight="bold">4. ghost/admin</text>
+  <text x="725" y="130" class="desc" text-anchor="middle">Ember 构建</text>
+  <text x="725" y="145" class="desc" text-anchor="middle">复制 React 应用</text>
+
+  <!-- Step 5 -->
+  <rect x="350" y="220" width="200" height="80" class="box" rx="5"/>
+  <text x="450" y="250" class="item" text-anchor="middle" font-weight="bold">5. ghost/core</text>
+  <text x="450" y="270" class="desc" text-anchor="middle">服务 Admin UI</text>
+  <text x="450" y="285" class="desc" text-anchor="middle">/ghost/assets/*</text>
+
+  <!-- Arrows -->
+  <path d="M 200 120 L 250 120" class="line"/>
+  <path d="M 400 120 L 450 120" class="line"/>
+  <path d="M 600 120 L 650 120" class="line"/>
+  <path d="M 725 160 L 725 190 L 450 190 L 450 220" class="line"/>
+
+  <!-- Parallel builds note -->
+  <rect x="50" y="330" width="800" height="50" fill="#f0fdf4" stroke="#059669" stroke-width="2" rx="5"/>
+  <text x="450" y="355" class="item" text-anchor="middle" fill="#059669">✓ Nx 自动处理依赖顺序和并行构建优化</text>
+  <text x="450" y="370" class="desc" text-anchor="middle" fill="#059669">命令: yarn build (构建全部) | yarn build:clean (清理后构建)</text>
+</svg>
